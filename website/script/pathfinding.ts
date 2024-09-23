@@ -134,17 +134,41 @@ updateFps(0);
     }
   }, 200 / cellSize);
 
-  const enemy: Character = {
-    position: Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX,
-    positionPx: getCanvasCoordsByCellNumber(Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX, cellsX, cellSize),
-    target: 0,
-    path: [],
-    explored: [],
-    direction: DIRECTION.DOWN,
-    speed: 2,
-    visionRadius: dayTimeVisionRadius,
-    visionRadiusPx: dayTimeVisionRadius * cellSize,
-  };
+  const enemies: Character[] = [
+    {
+      position: Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX,
+      positionPx: getCanvasCoordsByCellNumber(Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX, cellsX, cellSize),
+      target: 0,
+      path: [],
+      explored: [],
+      direction: DIRECTION.DOWN,
+      speed: 2,
+      visionRadius: dayTimeVisionRadius,
+      visionRadiusPx: dayTimeVisionRadius * cellSize,
+    },
+    {
+      position: Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX,
+      positionPx: getCanvasCoordsByCellNumber(Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX, cellsX, cellSize),
+      target: 0,
+      path: [],
+      explored: [],
+      direction: DIRECTION.DOWN,
+      speed: 2,
+      visionRadius: dayTimeVisionRadius,
+      visionRadiusPx: dayTimeVisionRadius * cellSize,
+    },
+    {
+      position: Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX,
+      positionPx: getCanvasCoordsByCellNumber(Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX, cellsX, cellSize),
+      target: 0,
+      path: [],
+      explored: [],
+      direction: DIRECTION.DOWN,
+      speed: 2,
+      visionRadius: dayTimeVisionRadius,
+      visionRadiusPx: dayTimeVisionRadius * cellSize,
+    },
+  ]
 
   function getRandomUnblockedCell(cells: Int8Array, blockedCells: number[]) {
     const unblockedCells: number[] = Array.from(cells).reduce((acc: number[], cellState: CELL_STATE, index: number) => {
@@ -170,7 +194,9 @@ updateFps(0);
         if (cellState === CELL_STATE.BLOCKED) drawTree(ctx, treeImages, cellNumber, cellsX, cellSize);
       }
       if (cellNumber === character.position) drawCharacter(ctx, cellsX, cellSize, tick, character);
-      if (cellNumber === enemy.position) drawEnemy(ctx, cellsX, cellSize, tick, enemy);
+      enemies.forEach(enemy => {
+        if (cellNumber === enemy.position) drawEnemy(ctx, cellsX, cellSize, tick, enemy);
+      });
     }
     drawClock(ctx, w, h, cellSize, dayNightCycle, time);
     if (!ignoreVision) {
@@ -193,11 +219,13 @@ updateFps(0);
   // memory leaking shit ??? // mb fixed
   function gameTicker() {
     moveCharacter(cells, cellsX, cellsY, cellSize, character, pressedKey);
-    if (!enemy.path.length) {
-      setRandomPathForCharacter(cells, treeCells, enemy);
-    } else {
-      moveCharacter(cells, cellsX, cellsY, cellSize, enemy, '');
-    }
+    enemies.forEach(enemy => {
+      if (!enemy.path.length) {
+        setRandomPathForCharacter(cells, treeCells, enemy);
+      } else {
+        moveCharacter(cells, cellsX, cellsY, cellSize, enemy, '');
+      }
+    });
     updateCharacterVision(cells, cellsX, character);
     const timeout = setTimeout(() => {
       gameTicker();
