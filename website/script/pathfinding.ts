@@ -306,10 +306,8 @@ updateFps(0);
       } else {
         cameraDistance = Math.min(maxCameraDistance, Math.round((cameraDistance + cameraDistanceStep) * 100) / 100);  // Zoom out
       }
-      if (character.target && character.position !== character.target && cells[character.target] !== CELL_STATE.BLOCKED) {
-        const newPath = await getPath(cells.map((c: number) => c), cellsX, cellsY,[[character.position]], character.target);
-        if (newPath && typeof newPath[0] === 'number' && newPath.length) character.path = newPath;
-      }
+      character.path = [];
+      character.target = null;
     }, 10);
 
     window.addEventListener('wheel', debounceChangeCameraDistance);
