@@ -6,6 +6,7 @@ export interface Character {
   target: number;
   path: number[];
   explored: number[];
+  visible: number[];
   direction: DIRECTION;
   speed: number;
   visionRadius: number;

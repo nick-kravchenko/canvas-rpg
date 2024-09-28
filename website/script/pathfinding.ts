@@ -84,6 +84,7 @@ updateFps(0);
     target: 0,
     path: [],
     explored: [],
+    visible: [],
     direction: DIRECTION.DOWN,
     speed: 2,
     visionRadius: dayTimeVisionRadius,
@@ -141,6 +142,7 @@ updateFps(0);
       target: 0,
       path: [],
       explored: [],
+      visible: [],
       direction: DIRECTION.DOWN,
       speed: 1,
       visionRadius: dayTimeVisionRadius,
@@ -152,6 +154,7 @@ updateFps(0);
       target: 0,
       path: [],
       explored: [],
+      visible: [],
       direction: DIRECTION.DOWN,
       speed: 1.33,
       visionRadius: dayTimeVisionRadius,
@@ -163,6 +166,7 @@ updateFps(0);
       target: 0,
       path: [],
       explored: [],
+      visible: [],
       direction: DIRECTION.DOWN,
       speed: 1.66,
       visionRadius: dayTimeVisionRadius,
@@ -224,7 +228,7 @@ updateFps(0);
         }
         if (cellNumber === character.position) drawCharacter(ctx, cellsX, cellSize, tick, character);
         enemies.forEach((enemy: Character) => {
-          if (cellNumber === enemy.position) drawEnemy(ctx, cellsX, cellSize, tick, enemy);
+          if (cellNumber === enemy.position && (ignoreVision || character.visible.includes(cellNumber))) drawEnemy(ctx, cellsX, cellSize, tick, enemy);
         });
       }
     }
