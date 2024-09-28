@@ -1,3 +1,4 @@
+import { debounce } from './debounce';
 import { getCanvasCoordsByCellNumber } from './get-canvas-coords-by-cell-number';
 import { getCellByCanvasCoords } from './get-cell-by-canvas-coords';
 import { getCellCoordsByCellNumber } from './get-cell-coords-by-cell-number';
@@ -19,6 +20,7 @@ import { setCharacterVisionRadiusPx } from './set-character-vision-radius-px';
 import { updateCharacterVision } from './update-character-vision';
 
 export {
+  debounce,
   getCanvasCoordsByCellNumber,
   getCellByCanvasCoords,
   getCellCoordsByCellNumber,
