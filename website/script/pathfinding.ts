@@ -4,9 +4,6 @@ import {
   getCellCoordsByCellNumber,
   getBlockedCells,
   getCharacterImageByDirection,
-  getCharacterVision,
-  getCharacterVisionCircle,
-  getCharacterVisionCircleTrees,
   getDirectionByKey,
   getNeighbors,
   getNextCharacterPositionByCellNumber,
@@ -50,7 +47,7 @@ function updateFps(time: number) {
     fps = Math.round(1000/((performance.now() - requestTime)));
   }
   requestTime = time;
-  window.requestAnimationFrame((timeRes) => updateFps(timeRes));
+  window.requestAnimationFrame((timeRes: number) => updateFps(timeRes));
 }
 updateFps(0);
 
@@ -67,7 +64,7 @@ updateFps(0);
   canvasElement.height = h;
 
   const gameTickRate: number = 1000 / 128; // 128hz
-  const dayNightCycle: number = .25 * 60 * 1000; // 24 minutes
+  const dayNightCycle: number = 6 * 60 * 1000; // 6 minutes
   const dayTimeVisionRadius: number = 6;
   const nightTimeVisionRadius: number = 3;
   let isNight: boolean = false;
@@ -93,15 +90,13 @@ updateFps(0);
 
   const treeCells: number[] = [
     176, 80, 16, /* top */
-    210, 117, 24, /* tr */
+    210, 117, 24, /* top-right */
     275, 278, 281, /* right */
-    338, 437, 503, /* rb */
+    338, 437, 503, /* bottom-right */
     368, 464, /* bottom */
-    334, 427, 489, /* bl */
+    334, 427, 489, /* bottom-left */
     269, 266, 263, /* left */
-    206, 107, 8, /* lt */
-
-    // 237, 301, 243, 307, 175, 177, 367, 369
+    206, 107, 8, /* top-left */
   ];
   function getRandomTreeImage(): HTMLImageElement {
     return imagesTrees[Math.floor(Math.random() * imagesTrees.length)];
@@ -188,21 +183,21 @@ updateFps(0);
       drawGround(ctx, cells, cellsX, cellsY, cellSize, cellNumber);
     }
     drawPath(ctx, character.path, cellsX, cellSize);
-    for (let cellNumber = 0; cellNumber < cells.length; cellNumber++) {
-      const cellState = cells[cellNumber];
+    for (let cellNumber: number = 0; cellNumber < cells.length; cellNumber++) {
+      const cellState: number = cells[cellNumber];
       if (ignoreVision || character.explored.includes(cellNumber)) {
         if (cellState === CELL_STATE.BLOCKED) drawTree(ctx, treeImages, cellNumber, cellsX, cellSize);
       }
       if (cellNumber === character.position) drawCharacter(ctx, cellsX, cellSize, tick, character);
-      enemies.forEach(enemy => {
+      enemies.forEach((enemy: Character) => {
         if (cellNumber === enemy.position) drawEnemy(ctx, cellsX, cellSize, tick, enemy);
       });
     }
     drawClock(ctx, w, h, cellSize, dayNightCycle, time);
     if (!ignoreVision) {
-      let maxVisionPx = dayTimeVisionRadius * cellSize;
-      let visiblePercent = character.visionRadiusPx / maxVisionPx;
-      let alpha = .4 + (.2 / visiblePercent);
+      let maxVisionPx: number = dayTimeVisionRadius * cellSize;
+      let visiblePercent: number = character.visionRadiusPx / maxVisionPx;
+      let alpha: number = .4 + (.2 / visiblePercent);
       drawVision(ctx, w, h, treeCells, cellsX, cellSize, character, `rgba(0, 0, 0, ${alpha})`);
     }
     drawPointer(ctx, pointerTarget, cellsX, cellSize, tick);
@@ -219,7 +214,7 @@ updateFps(0);
   // memory leaking shit ??? // mb fixed
   function gameTicker() {
     moveCharacter(cells, cellsX, cellsY, cellSize, character, pressedKey);
-    enemies.forEach(enemy => {
+    enemies.forEach((enemy: Character) => {
       if (!enemy.path.length) {
         setRandomPathForCharacter(cells, treeCells, enemy);
       } else {
@@ -236,20 +231,20 @@ updateFps(0);
 
   (() => {
     canvasElement.addEventListener('click', async (e: MouseEvent) => {
-      const rect = canvasElement.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / canvasElement.clientWidth) * w;
-      const y = ((e.clientY - rect.top) / canvasElement.clientHeight) * h;
+      const rect: DOMRect = canvasElement.getBoundingClientRect();
+      const x: number = ((e.clientX - rect.left) / canvasElement.clientWidth) * w;
+      const y: number = ((e.clientY - rect.top) / canvasElement.clientHeight) * h;
       character.target = getCellByCanvasCoords(x, y, cellSize, cellsX);
       if (character.position !== character.target && cells[character.target] !== CELL_STATE.BLOCKED) {
-        const newPath = await getPath(cells.map(c => c), cellsX, cellsY,[[character.position]], character.target);
+        const newPath = await getPath(cells.map((c: number) => c), cellsX, cellsY,[[character.position]], character.target);
         if (newPath && typeof newPath[0] === 'number' && newPath.length) character.path = newPath;
       }
     });
 
     canvasElement.addEventListener('mousemove', async (e: MouseEvent) => {
-      const rect = canvasElement.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / canvasElement.clientWidth) * w;
-      const y = ((e.clientY - rect.top) / canvasElement.clientHeight) * h;
+      const rect: DOMRect = canvasElement.getBoundingClientRect();
+      const x: number = ((e.clientX - rect.left) / canvasElement.clientWidth) * w;
+      const y: number = ((e.clientY - rect.top) / canvasElement.clientHeight) * h;
       pointerTarget = getCellByCanvasCoords(x, y, cellSize, cellsX);
     });
 

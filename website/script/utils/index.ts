@@ -3,8 +3,6 @@ import { getCellByCanvasCoords } from './get-cell-by-canvas-coords';
 import { getCellCoordsByCellNumber } from './get-cell-coords-by-cell-number';
 import { getBlockedCells } from './get-blocked-cells';
 import { getCharacterImageByDirection } from './get-character-image-by-direction';
-import { getCharacterVision } from './get-character-vision';
-import { getCharacterVisionCircle, getCharacterVisionCircleTrees } from './get-character-vision-circle';
 import { getDirectionByKey } from './get-direction-by-key';
 import { moveCharacter } from './move-character';
 import { getNeighbors } from './get-neighbors';
@@ -26,9 +24,6 @@ export {
   getCellCoordsByCellNumber,
   getBlockedCells,
   getCharacterImageByDirection,
-  getCharacterVision,
-  getCharacterVisionCircle,
-  getCharacterVisionCircleTrees,
   getDirectionByKey,
   getNeighbors,
   getNextCharacterPositionByCellNumber,
