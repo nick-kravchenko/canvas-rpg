@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
 
 module.exports = {
   entry: path.resolve(__dirname, 'website/script/index.ts'),
@@ -17,6 +18,27 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
+    }),
+    new FaviconsWebpackPlugin({
+      logo: path.resolve(__dirname, 'website/favicons/favicon.png'), // Path to your favicon image
+      cache: true, // Caches generated favicons to speed up subsequent builds
+      inject: true, // Injects favicon links into the HTML
+      favicons: {
+        appName: 'Canvas RPG',
+        appDescription: 'RPG Game App',
+        developerName: 'Nick Kravchenko',
+        developerURL: 'https://nick-kravchenko.github.io/canvas-rpg/', // Developer website
+        background: '#ddd', // Background color of the favicon
+        theme_color: '#333', // Theme color for mobile browsers
+        icons: {
+          android: false,
+          chrome: false,
+          favicons: true,
+          appleIcon: true,
+          appleStartup: false,
+          windows: false,
+        },
+      },
     }),
   ],
   module: {

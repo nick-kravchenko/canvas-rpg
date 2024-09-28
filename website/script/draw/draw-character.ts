@@ -21,11 +21,9 @@ export function drawCharacter(
     }
   }
   const [x, y]: [number, number] = character.positionPx;
-  const ySkew: number = Math.sin(tick / 160) * 2;
   ctx.save();
   ctx.beginPath();
   ctx.fillStyle = 'rgba(0, 0, 0, .5)';
-  ctx.ellipse(x + cellSize / 2, y + cellSize, (cellSize / 2) + ySkew, 8 + ySkew/4, 0, 0, Math.PI * 2);
   ctx.closePath();
   ctx.fill();
   ctx.restore();
@@ -34,7 +32,7 @@ export function drawCharacter(
   ctx.drawImage(
     getCharacterImageByDirection(character.direction),
     x,
-    y + ySkew,
+    y,
     cellSize,
     cellSize,
   );
