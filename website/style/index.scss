@@ -28,6 +28,12 @@ canvas {
   background: rgba(0, 0, 0, .5);
   font-family: "Tiny5", sans-serif;
   font-optical-sizing: auto;
+  opacity: 0;
+  transition: .2s opacity;
+  will-change: opacity;
+  &:hover {
+    opacity: 1;
+  }
   label {
     display: flex;
     align-items: center;

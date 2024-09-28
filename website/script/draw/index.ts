@@ -5,6 +5,7 @@ import { drawDebugData } from './draw-debug-data';
 import { drawDebugGrid } from './draw-debug-grid';
 import { drawGround } from './draw-ground';
 import { drawEnemy } from './draw-enemy';
+import { drawMinimap } from './draw-minimap';
 import { drawPath } from './draw-path';
 import { drawPointer } from './draw-pointer';
 import { drawSquareOnCell } from './draw-square-on-cell';
@@ -19,6 +20,7 @@ export {
   drawDebugGrid,
   drawGround,
   drawEnemy,
+  drawMinimap,
   drawPath,
   drawPointer,
   drawSquareOnCell,

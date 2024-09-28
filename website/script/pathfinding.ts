@@ -26,7 +26,7 @@ import {
   drawClock,
   drawDebugData,
   drawDebugGrid, drawEnemy,
-  drawGround,
+  drawGround, drawMinimap,
   drawPath,
   drawPointer,
   drawTree,
@@ -244,6 +244,7 @@ updateFps(0);
     ctx.restore();
     if (debugData) drawDebugData(ctx, cellSize, w, { FPS: fps });
     drawClock(ctx, w, h, cellSize, dayNightCycle, time);
+    drawMinimap(ctx, w, h, cells, cellsX, cellsY, cameraDistance, translateX, translateY, character);
   }
 
   function frameTicker(tick: number) {
