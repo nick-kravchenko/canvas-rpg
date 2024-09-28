@@ -2,20 +2,20 @@ import {
   debounce,
   getCanvasCoordsByCellNumber,
   getCellByCanvasCoords,
-  getCellCoordsByCellNumber,
+  // getCellCoordsByCellNumber,
   getBlockedCells,
-  getCharacterImageByDirection,
+  // getCharacterImageByDirection,
   getDirectionByKey,
-  getNeighbors,
-  getNextCharacterPositionByCellNumber,
+  // getNeighbors,
+  // getNextCharacterPositionByCellNumber,
   getPath,
-  getPerlinNoise,
-  getStateStringByEnum,
-  imagesCharacter,
+  // getPerlinNoise,
+  // getStateStringByEnum,
+  // imagesCharacter,
   imagesTrees,
   moveCharacter,
   setCanvasSizeToFullScreen,
-  setCellVisited,
+  // setCellVisited,
   setCharacterVisionRadius,
   setCharacterVisionRadiusPx,
   updateCharacterVision,
@@ -171,7 +171,7 @@ updateFps(0);
   ]
 
   function getRandomUnblockedCell(cells: Int8Array, blockedCells: number[]) {
-    const unblockedCells: number[] = Array.from(cells).reduce((acc: number[], cellState: CELL_STATE, index: number) => {
+    const unblockedCells: number[] = Array.from(cells).reduce((acc: number[], _: CELL_STATE, index: number) => {
       return !blockedCells.includes(index) ? [...acc, index] : acc;
     }, []);
     return unblockedCells[Math.floor(Math.random() * unblockedCells.length)];
@@ -266,10 +266,15 @@ updateFps(0);
   gameTicker();
 
   (() => {
-    canvasElement.addEventListener('click', async (e: MouseEvent) => {
+    function getCoordsByMouseEvent(event: MouseEvent): [number, number] {
       const rect: DOMRect = canvasElement.getBoundingClientRect();
-      const x: number = ((((e.clientX - rect.left) / canvasElement.clientWidth) * w) - translateX) * cameraDistance;
-      const y: number = ((((e.clientY - rect.top) / canvasElement.clientHeight) * h) - translateY) * cameraDistance;
+      const x: number = ((((event.clientX - rect.left) / canvasElement.clientWidth) * w) - translateX) * cameraDistance;
+      const y: number = ((((event.clientY - rect.top) / canvasElement.clientHeight) * h) - translateY) * cameraDistance;
+      return [x, y];
+    }
+
+    canvasElement.addEventListener('click', async (e: MouseEvent) => {
+      const [x, y]: [number, number] = getCoordsByMouseEvent(e);
       character.target = getCellByCanvasCoords(x, y, cellSize, cellsX);
       if (character.position !== character.target && cells[character.target] !== CELL_STATE.BLOCKED) {
         const newPath = await getPath(cells.map((c: number) => c), cellsX, cellsY,[[character.position]], character.target);
@@ -278,9 +283,7 @@ updateFps(0);
     });
 
     canvasElement.addEventListener('mousemove', async (e: MouseEvent) => {
-      const rect: DOMRect = canvasElement.getBoundingClientRect();
-      const x: number = ((((e.clientX - rect.left) / canvasElement.clientWidth) * w) - translateX) * cameraDistance;
-      const y: number = ((((e.clientY - rect.top) / canvasElement.clientHeight) * h) - translateY) * cameraDistance;
+      const [x, y]: [number, number] = getCoordsByMouseEvent(e);
       pointerTarget = getCellByCanvasCoords(x, y, cellSize, cellsX);
     });
 
