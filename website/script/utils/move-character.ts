@@ -3,6 +3,17 @@ import { getCanvasCoordsByCellNumber } from './get-canvas-coords-by-cell-number'
 import { DirectionKeyCodes } from '../enums/direction-key-codes.enum';
 import { Character } from '../types/character';
 
+const DIRECTION_KEYS: string[] = [
+  DirectionKeyCodes.KeyW,
+  DirectionKeyCodes.ArrowUp,
+  DirectionKeyCodes.KeyA,
+  DirectionKeyCodes.ArrowLeft,
+  DirectionKeyCodes.KeyS,
+  DirectionKeyCodes.ArrowDown,
+  DirectionKeyCodes.KeyD,
+  DirectionKeyCodes.ArrowRight,
+];
+
 export function moveCharacter(cells: Int8Array, cellsX: number, cellsY: number, cellSize: number, character: Character, pressedKey: string) {
   const newCharacterPosition: number = getNextCharacterPositionByCellNumber(cells, cellsX, cellsY, character.path, pressedKey, character.position, character.direction);
   const newCharacterPositionPx: [number, number] = getCanvasCoordsByCellNumber(newCharacterPosition, cellsX, cellSize);
@@ -18,8 +29,7 @@ export function moveCharacter(cells: Int8Array, cellsX: number, cellsY: number, 
     character.position = newCharacterPosition;
     character.path.shift();
   }
-  // @ts-ignore
-  if (Object.values(DirectionKeyCodes).includes(pressedKey)) {
+  if (DIRECTION_KEYS.includes(pressedKey)) {
     character.path = [];
   }
 }
