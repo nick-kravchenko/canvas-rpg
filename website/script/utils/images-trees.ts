@@ -24,21 +24,30 @@ import Fruit_tree1_PNG from '../../images/trees/separately/Trees_texture_shadow_
 import Fruit_tree2_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Fruit_tree2.png';
 // @ts-ignore
 import Fruit_tree3_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Fruit_tree3.png';
+// @ts-ignore
+import Flower_tree1_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Flower_tree1.png';
+// @ts-ignore
+import Flower_tree2_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Flower_tree2.png';
+// @ts-ignore
+import Flower_tree3_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Flower_tree3.png';
 
 const imagesTreesPng = [
   Autumn_tree1_PNG,
   Autumn_tree2_PNG,
   Autumn_tree3_PNG,
-  Broken_tree1_PNG,
-  Broken_tree2_PNG,
-  Broken_tree3_PNG,
-  Broken_tree4_PNG,
-  Broken_tree5_PNG,
-  Broken_tree6_PNG,
-  Broken_tree7_PNG,
+  // Broken_tree1_PNG,
+  // Broken_tree2_PNG,
+  // Broken_tree3_PNG,
+  // Broken_tree4_PNG,
+  // Broken_tree5_PNG,
+  // Broken_tree6_PNG,
+  // Broken_tree7_PNG,
   Fruit_tree1_PNG,
   Fruit_tree2_PNG,
   Fruit_tree3_PNG,
+  Flower_tree1_PNG,
+  Flower_tree2_PNG,
+  Flower_tree3_PNG,
 ];
 
 export const imagesTrees: HTMLImageElement[] = [];

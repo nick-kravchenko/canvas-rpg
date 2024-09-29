@@ -224,7 +224,7 @@ updateFps(0);
       if (inVision(cellNumber)) {
         const cellState: number = cells[cellNumber];
         if (ignoreVision || character.explored.includes(cellNumber)) {
-          if (cellState === CELL_STATE.BLOCKED) drawTree(ctx, treeImages, cellNumber, cellsX, cellSize);
+          if (cellState === CELL_STATE.BLOCKED) drawTree(ctx, treeImages, cellNumber, cellsX, cellSize, character);
         }
         if (cellNumber === character.position) drawCharacter(ctx, cellsX, cellSize, tick, character);
         enemies.forEach((enemy: Character) => {
