@@ -6,10 +6,10 @@ export function drawTree(ctx: CanvasRenderingContext2D, treeImages: { [key: numb
   ctx.save();
   ctx.drawImage(
     treeImage,
-    x,
-    y,
-    cellSize,
-    cellSize,
+    x + (cellSize / 2) - (treeImage.width / 2),
+    y + (cellSize / 2) - (treeImage.height / 2),
+    treeImage.width,
+    treeImage.height,
   );
   ctx.restore();
 }

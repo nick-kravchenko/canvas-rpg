@@ -70,7 +70,7 @@ updateFps(0);
   const nightTimeVisionRadius: number = 3;
   let isNight: boolean = false;
   let time: number = 0;
-  let cameraDistance: number = .5; // 1 = 100% = max distance
+  let cameraDistance: number = 1; // 1 = 100% = max distance
 
   let pointerTarget: number|undefined;
   let pressedKey: string;
@@ -293,13 +293,14 @@ updateFps(0);
     });
 
     window.addEventListener('keydown', (event: KeyboardEvent) => {
-      character.direction = getDirectionByKey(event.code);
       pressedKey = event.code;
+      character.direction = getDirectionByKey(event.code);
     });
 
     window.addEventListener('keyup', (event: KeyboardEvent) => {
       if (pressedKey === event.code) {
         pressedKey = undefined;
+        character.direction = null;
       }
     });
 

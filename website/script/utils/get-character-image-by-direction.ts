@@ -10,7 +10,8 @@ export function getCharacterImageByDirection(direction: DIRECTION): HTMLImageEle
     case DIRECTION.LEFT:
       return imagesCharacter.left;
     case DIRECTION.DOWN:
-    default:
       return imagesCharacter.front;
+    default:
+      return imagesCharacter.idle;
   }
 }

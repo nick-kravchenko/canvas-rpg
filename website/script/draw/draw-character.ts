@@ -28,7 +28,7 @@ export function drawCharacter(
   ctx.fill();
   ctx.restore();
   ctx.save();
-  ctx.filter = 'brightness(2.4)';
+  // ctx.filter = 'brightness(2.4)';
   ctx.drawImage(
     getCharacterImageByDirection(character.direction),
     x,
