@@ -10,8 +10,8 @@ canvas {
   width: auto;
   height: auto;
   max-height: 100vh;
-  //image-rendering: pixelated;
-  //image-rendering: crisp-edges;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
 }
 
 .controls {
@@ -49,4 +49,28 @@ canvas {
       margin: 0 8px 0 0;
     }
   }
+}
+.canvas-wrapper {
+  position: relative;
+  width: 100%;
+  //&:after {
+  //  content: '';
+  //  display: block;
+  //  position: absolute;
+  //  width: 1px;
+  //  height: 100vh;
+  //  background: #000;
+  //  left: 50%;
+  //  top: 0;
+  //}
+  //&:before {
+  //  content: '';
+  //  display: block;
+  //  position: absolute;
+  //  width: 100vw;
+  //  height: 1px;
+  //  background: #000;
+  //  top: 50%;
+  //  left: 0;
+  //}
 }

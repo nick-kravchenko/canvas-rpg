@@ -1,5 +1,5 @@
 import { DIRECTION } from '../enums/direction.enum';
-import { getCharacterImageByDirection } from '../utils';
+import { getCanvasCoordsByCellNumber, getCharacterImageByDirection } from '../utils';
 import { Character } from '../types/character';
 
 export function drawCharacter(
@@ -21,20 +21,26 @@ export function drawCharacter(
     }
   }
   const [x, y]: [number, number] = character.positionPx;
-  ctx.save();
-  ctx.beginPath();
-  ctx.fillStyle = 'rgba(0, 0, 0, .5)';
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-  ctx.save();
-  // ctx.filter = 'brightness(2.4)';
   ctx.drawImage(
     getCharacterImageByDirection(character.direction),
-    x,
-    y,
+    x + cellSize * .5 - getCharacterImageByDirection(character.direction).width * .5,
+    y + cellSize * .5 - getCharacterImageByDirection(character.direction).height * .5,
     cellSize,
     cellSize,
   );
-  ctx.restore();
+
+  // ctx.save();
+  // character.explored.forEach((cellNumber: number) => {
+  //   const [x, y]: [number, number] = getCanvasCoordsByCellNumber(cellNumber, cellsX, cellSize);
+  //   ctx.lineWidth = cellSize * .05125;
+  //   ctx.strokeStyle = '#f0f';
+  //   ctx.strokeRect(x, y, cellSize, cellSize);
+  // });
+  // character.visible.forEach((cellNumber: number) => {
+  //   const [x, y]: [number, number] = getCanvasCoordsByCellNumber(cellNumber, cellsX, cellSize);
+  //   ctx.lineWidth = cellSize * .125;
+  //   ctx.strokeStyle = '#0af';
+  //   ctx.strokeRect(x, y, cellSize, cellSize);
+  // });
+  // ctx.restore();
 }

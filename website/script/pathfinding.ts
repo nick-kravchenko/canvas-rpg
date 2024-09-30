@@ -18,7 +18,7 @@ import {
   // setCellVisited,
   setCharacterVisionRadius,
   setCharacterVisionRadiusPx,
-  updateCharacterVision,
+  updateCharacterVision, getDistanceInCells, getNeighbors,
 } from './utils';
 import {
   drawBackground,
@@ -36,6 +36,7 @@ import {
 import { CELL_STATE } from './enums/cell-state.enum';
 import { DIRECTION } from './enums/direction.enum';
 import { Character } from './types/character';
+import { Npc } from './types/npc';
 
 let debugGrid: boolean = false;
 let debugData: boolean = true;
@@ -75,8 +76,8 @@ updateFps(0);
   let pointerTarget: number|undefined;
   let pressedKey: string;
 
-  let translateX = 0;
-  let translateY = 0;
+  let translateX: number = 0;
+  let translateY: number = 0;
 
   const character: Character = {
     position: Math.round(((cellsX * cellsY) / 2) + cellsX / 2),
@@ -103,6 +104,8 @@ updateFps(0);
     334, 427, 489, /* bottom-left */
     269, 266, 263, /* left */
     206, 107, 8, /* top-left */
+
+    220, 68
   ];
   function getRandomTreeImage(): HTMLImageElement {
     return imagesTrees[Math.floor(Math.random() * imagesTrees.length)];
@@ -135,56 +138,82 @@ updateFps(0);
     }
   }, 200 / cellSize);
 
-  const enemies: Character[] = [
+  const enemies: Npc[] = [
     {
-      position: Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX,
-      positionPx: getCanvasCoordsByCellNumber(Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX, cellsX, cellSize),
+      position: 66,
+      positionPx: getCanvasCoordsByCellNumber(66, cellsX, cellSize),
       target: 0,
       path: [],
       explored: [],
       visible: [],
       direction: DIRECTION.DOWN,
       speed: 1,
-      visionRadius: dayTimeVisionRadius,
-      visionRadiusPx: dayTimeVisionRadius * cellSize,
+      visionRadius: 5,
+      visionRadiusPx: 5 * cellSize,
+      anchorPosition: 66,
+      wanderingRadius: 4,
     },
     {
-      position: Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX,
-      positionPx: getCanvasCoordsByCellNumber(Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX, cellsX, cellSize),
+      position: 386,
+      positionPx: getCanvasCoordsByCellNumber(386, cellsX, cellSize),
       target: 0,
       path: [],
       explored: [],
       visible: [],
       direction: DIRECTION.DOWN,
       speed: 1.33,
-      visionRadius: dayTimeVisionRadius,
-      visionRadiusPx: dayTimeVisionRadius * cellSize,
+      visionRadius: 5,
+      visionRadiusPx: 5 * cellSize,
+      anchorPosition: 386,
+      wanderingRadius: 4,
     },
     {
-      position: Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX,
-      positionPx: getCanvasCoordsByCellNumber(Math.round(((cellsX * cellsY) / 2) + cellsX / 2) + cellsX, cellsX, cellSize),
+      position: 222,
+      positionPx: getCanvasCoordsByCellNumber(222, cellsX, cellSize),
       target: 0,
       path: [],
       explored: [],
       visible: [],
       direction: DIRECTION.DOWN,
       speed: 1.66,
-      visionRadius: dayTimeVisionRadius,
-      visionRadiusPx: dayTimeVisionRadius * cellSize,
+      visionRadius: 5,
+      visionRadiusPx: 5 * cellSize,
+      anchorPosition: 222,
+      wanderingRadius: 4,
     },
   ]
 
-  function getRandomUnblockedCell(cells: Int8Array, blockedCells: number[]) {
+  function getRandomUnblockedCell(cells: Int8Array, blockedCells: number[], npc: Npc) {
     const unblockedCells: number[] = Array.from(cells).reduce((acc: number[], _: CELL_STATE, index: number) => {
-      return !blockedCells.includes(index) ? [...acc, index] : acc;
+      return !blockedCells.includes(index) && getDistanceInCells(cellsX, npc.anchorPosition, index) <= npc.wanderingRadius ? [...acc, index] : acc;
     }, []);
     return unblockedCells[Math.floor(Math.random() * unblockedCells.length)];
   }
-  async function setRandomPathForCharacter(cells: Int8Array, blockedCells: number[], character: Character) {
-    character.target = getRandomUnblockedCell(cells, blockedCells);
-    const newPath = await getPath(cells.map(c => c), cellsX, cellsY,[[character.position]], character.target);
-    if (newPath && typeof newPath[0] === 'number' && newPath.length) character.path = newPath;
+  function setRandomPathForNpc(cells: Int8Array, blockedCells: number[], npc: Npc) {
+    npc.target = getRandomUnblockedCell(cells, blockedCells, npc);
+    const newPath = getPath(cells.map(c => c), cellsX, cellsY, npc.position, npc.target);
+    if (newPath && typeof newPath[0] === 'number' && newPath.length) npc.path = newPath;
   }
+  function chasePlayer(npc: Npc, player: Character) {
+    const playerNeighbors: number[] = getNeighbors(cells, cellsX, cellsY, player.position)
+                                        .filter((cellNumber: number) => cells[cellNumber] !== CELL_STATE.BLOCKED);
+    const closestNeighborPath: number[] = playerNeighbors.reduce((prevPath: number[]|null, cur: number) => {
+      const newPath = getPath(cells.map(c => c), cellsX, cellsY, npc.position, cur);
+      return !prevPath || (newPath.length < prevPath.length) ?  newPath : prevPath;
+    }, null);
+    if (closestNeighborPath && typeof closestNeighborPath[0] === 'number' && closestNeighborPath.length) {
+      npc.target = closestNeighborPath[closestNeighborPath.length  - 1];
+      npc.path = closestNeighborPath.slice(1);
+    }
+  }
+
+  const inVision = (number: number) => {
+    const visionRangeX: number = Math.round(cellsX * cameraDistance);
+    const visionRangeY: number = Math.round(cellsY * cameraDistance);
+    const inVisionVertically: boolean = Math.abs(Math.floor(number / cellsX) - Math.floor(character.position / cellsX)) - visionRangeX / cameraDistance <= visionRangeY;
+    const inVisionHorizontally: boolean = Math.abs(Math.floor(number % cellsX) - Math.floor(character.position % cellsX)) - visionRangeY / cameraDistance <= visionRangeX;
+    return inVisionVertically && inVisionHorizontally;
+  };
 
   function draw(tick: number) {
     ctx.save();
@@ -209,13 +238,6 @@ updateFps(0);
     ctx.scale(scale, scale);
 
     drawBackground(ctx, 'hsla(100, 100%, 75%, .5)', w, h);
-    const inVision = (number: number) => {
-      const visionRangeX: number = Math.round(cellsX * cameraDistance);
-      const visionRangeY: number = Math.round(cellsY * cameraDistance);
-      const inVisionVertically: boolean = Math.abs(Math.floor(number / cellsX) - Math.floor(character.position / cellsX)) - visionRangeX / cameraDistance <= visionRangeY;
-      const inVisionHorizontally: boolean = Math.abs(Math.floor(number % cellsX) - Math.floor(character.position % cellsX)) - visionRangeY / cameraDistance <= visionRangeX;
-      return inVisionVertically && inVisionHorizontally;
-    };
     for (let cellNumber: number = 0; cellNumber < cells.length; cellNumber++) {
       if (inVision(cellNumber)) drawGround(ctx, cells, cellsX, cellsY, cellSize, cellNumber);
     }
@@ -227,8 +249,8 @@ updateFps(0);
           if (cellState === CELL_STATE.BLOCKED) drawTree(ctx, treeImages, cellNumber, cellsX, cellSize, character);
         }
         if (cellNumber === character.position) drawCharacter(ctx, cellsX, cellSize, tick, character);
-        enemies.forEach((enemy: Character) => {
-          if (cellNumber === enemy.position && (ignoreVision || character.visible.includes(cellNumber))) drawEnemy(ctx, cellsX, cellSize, tick, enemy);
+        enemies.forEach((enemy: Npc) => {
+          if (cellNumber === enemy.position && (ignoreVision || character.visible.includes(cellNumber))) drawEnemy(ctx, cellsX, cellSize, tick, enemy, character);
         });
       }
     }
@@ -242,27 +264,24 @@ updateFps(0);
     if (debugGrid) drawDebugGrid(ctx, cells, cellsX, cellSize);
     ctx.resetTransform();
     ctx.restore();
-    if (debugData) drawDebugData(ctx, cellSize, w, { FPS: fps });
     drawClock(ctx, w, h, cellSize, dayNightCycle, time);
     drawMinimap(ctx, w, h, cells, cellsX, cellsY, cameraDistance, translateX, translateY, character);
+    if (debugData) drawDebugData(ctx, cellSize, w, { FPS: fps });
   }
-
-  function frameTicker(tick: number) {
-    draw(tick);
-    window.requestAnimationFrame(frameTicker);
-  }
-  frameTicker(0);
 
   function gameTicker() {
     moveCharacter(cells, cellsX, cellsY, cellSize, character, pressedKey);
-    enemies.forEach((enemy: Character) => {
-      if (!enemy.path.length) {
-        setRandomPathForCharacter(cells, treeCells, enemy);
-      } else {
-        moveCharacter(cells, cellsX, cellsY, cellSize, enemy, '');
+    updateCharacterVision(cells, treeCells, cellsX, cellSize, character);
+
+    for (let enemy of enemies) {
+      if (enemy.visible.includes(character.position)) chasePlayer(enemy, character);
+      if (enemy.path.length) moveCharacter(cells, cellsX, cellsY, cellSize, enemy, '');
+      if (!enemy.path.length && !enemy.visible.includes(character.position) && enemy.anchorPosition !== enemy.position) {
+        enemy.target = enemy.anchorPosition;
+        enemy.path = getPath(cells, cellsX, cellsY, enemy.position, enemy.target);
       }
-    });
-    updateCharacterVision(cells, cellsX, character);
+      updateCharacterVision(cells, treeCells, cellsX, cellSize, enemy);
+    }
     const timeout = setTimeout(() => {
       gameTicker();
       clearTimeout(timeout);
@@ -270,7 +289,16 @@ updateFps(0);
   }
   gameTicker();
 
-  (() => {
+  function frameTicker(tick: number) {
+    draw(tick);
+    window.requestAnimationFrame(frameTicker);
+  }
+  frameTicker(0);
+
+  /**
+   * Event listeners for 'click', 'mousemove', 'wheel', 'keydown', 'keyup' and 'change' for checkboxes
+   */
+  (function handleControls() {
     function getCoordsByMouseEvent(event: MouseEvent): [number, number] {
       const rect: DOMRect = canvasElement.getBoundingClientRect();
       const x: number = ((((event.clientX - rect.left) / canvasElement.clientWidth) * w) - translateX) * cameraDistance;
@@ -282,7 +310,7 @@ updateFps(0);
       const [x, y]: [number, number] = getCoordsByMouseEvent(e);
       character.target = getCellByCanvasCoords(x, y, cellSize, cellsX);
       if (character.position !== character.target && cells[character.target] !== CELL_STATE.BLOCKED) {
-        const newPath = await getPath(cells.map((c: number) => c), cellsX, cellsY,[[character.position]], character.target);
+        const newPath = getPath(cells.map((c: number) => c), cellsX, cellsY, character.position, character.target);
         if (newPath && typeof newPath[0] === 'number' && newPath.length) character.path = newPath;
       }
     });

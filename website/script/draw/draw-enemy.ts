@@ -1,5 +1,6 @@
 import { DIRECTION } from '../enums/direction.enum';
 import { getCharacterImageByDirection } from '../utils';
+import { Npc } from '../types/npc';
 import { Character } from '../types/character';
 
 export function drawEnemy(
@@ -7,7 +8,8 @@ export function drawEnemy(
   cellsX: number,
   cellSize: number,
   tick: number,
-  enemy: Character,
+  enemy: Npc,
+  player: Character,
 ) {
   if (enemy.path.length) {
     if (enemy.path[0] + 1 === enemy.position) {
@@ -21,21 +23,11 @@ export function drawEnemy(
     }
   }
   const [x, y]: [number, number] = enemy.positionPx;
-  const ySkew: number = Math.sin(tick / 160) * 2;
-  ctx.save();
-  ctx.beginPath();
-  ctx.fillStyle = 'rgba(0, 0, 0, .5)';
-  ctx.ellipse(x + cellSize / 2, y + cellSize, (cellSize / 2) + ySkew, 8 + ySkew/4, 0, 0, Math.PI * 2);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-  ctx.save();
   ctx.drawImage(
     getCharacterImageByDirection(enemy.direction),
-    x,
-    y + ySkew,
+    x + cellSize * .5 - getCharacterImageByDirection(enemy.direction).width * .5,
+    y + cellSize * .5 - getCharacterImageByDirection(enemy.direction).height * .5,
     cellSize,
     cellSize,
   );
-  ctx.restore();
 }

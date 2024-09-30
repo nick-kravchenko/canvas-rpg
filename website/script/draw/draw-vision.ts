@@ -1,18 +1,6 @@
-import { getCanvasCoordsByCellNumber } from '../utils';
+import { getCanvasCoordsByCellNumber, getLinesIntersection, getVisibleTrees } from '../utils';
 import { Character } from '../types/character';
-
-function findIntersection(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, x4: number, y4: number): [number, number]|null {
-  const denom: number = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
-  if (denom === 0) return null;
-  const t: number = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom;
-  const u: number = -((x1 - x2) * (y1 - y3) - (y1 - y2) * (x1 - x3)) / denom;
-  if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-    const intersectX: number = x1 + t * (x2 - x1);
-    const intersectY: number = y1 + t * (y2 - y1);
-    return [intersectX, intersectY];
-  }
-  return null;
-}
+import { VisibleTrees } from '../utils/get-visible-trees';
 
 export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, blockedCells: number[], cellsX: number, cellSize: number, character: Character, color: string) {
   let segments: number = 1.875 * character.visionRadiusPx;
@@ -21,57 +9,7 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
   let centerY: number = y + (cellSize / 2);
   let firstPoint: [number, number];
 
-  let visibleTrees: {
-    topLeft: number[];
-    top: number[];
-    topRight: number[];
-    right: number[];
-    bottomRight: number[];
-    bottom: number[];
-    bottomLeft: number[];
-    left: number[];
-  } = {
-    topLeft: [],
-    top: [],
-    topRight: [],
-    right: [],
-    bottomRight: [],
-    bottom: [],
-    bottomLeft: [],
-    left: [],
-  };
-  for (let i: number = 0; i < blockedCells.length; i++) {
-    let treePosition: number = blockedCells[i];
-    let [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
-    let isLeft: boolean = (treePosition % cellsX) < (character.position % cellsX);
-    let isRight: boolean = (treePosition % cellsX) > (character.position % cellsX);
-    let isTop: boolean = (treePosition < character.position) && (Math.floor(character.position / cellsX) > Math.floor(treePosition / cellsX));
-    let isBottom: boolean = (treePosition > character.position) && (Math.floor(character.position / cellsX) < Math.floor(treePosition / cellsX));
-    let isVerticalTop: boolean = isTop && (!isLeft && !isRight);
-    let isVerticalBottom: boolean = isBottom && (!isLeft && !isRight);
-    let isHorizontalLeft: boolean = isLeft && (!isTop && !isBottom);
-    let isHorizontalRight: boolean = isRight && (!isTop && !isBottom);
-    if (isHorizontalLeft && (treeX + cellSize) >= (centerX - character.visionRadiusPx)) visibleTrees.left.push(treePosition);
-    if (isHorizontalRight && (treeX) <= (centerX + character.visionRadiusPx)) visibleTrees.right.push(treePosition);
-    if (isVerticalTop && (treeY + cellSize) >= (centerY - character.visionRadiusPx)) visibleTrees.top.push(treePosition);
-    if (isVerticalBottom && (treeY) <= (centerY + character.visionRadiusPx)) visibleTrees.bottom.push(treePosition);
-    if (
-      !isHorizontalLeft && !isVerticalTop && (isTop && isLeft)
-      && Math.sqrt((x - (treeX + cellSize))**2 + (y - (treeY + cellSize))**2) < character.visionRadiusPx - (cellSize / 2)
-    ) visibleTrees.topLeft.push(treePosition);
-    if (
-      !isHorizontalLeft && !isVerticalTop && (isBottom && isLeft)
-      && Math.sqrt((x - (treeX + cellSize))**2 + (y - treeY)**2) < character.visionRadiusPx - (cellSize / 2)
-    ) visibleTrees.bottomLeft.push(treePosition);
-    if (
-      !isHorizontalRight && !isVerticalTop && (isTop && isRight)
-      && Math.sqrt(((treeX) - x)**2 + (y - (treeY + cellSize))**2) < character.visionRadiusPx - (cellSize / 2)
-    ) visibleTrees.topRight.push(treePosition);
-    if (
-      !isHorizontalRight && !isVerticalTop && (isBottom && isRight)
-      && Math.sqrt(((treeX) - x)**2 + (y - treeY)**2) < character.visionRadiusPx - (cellSize / 2)
-    ) visibleTrees.bottomRight.push(treePosition);
-  }
+  let visibleTrees: VisibleTrees = getVisibleTrees(blockedCells, cellsX, cellSize, character.position, x, y, centerX, centerY, character.visionRadiusPx);
 
   ctx.save();
   ctx.beginPath();
@@ -86,12 +24,12 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
     const intersections: [number, number][] = [];
     visibleTrees.topLeft.forEach((treePosition) => {
       const [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
-      let i: [number, number] = findIntersection(
+      let i: [number, number] = getLinesIntersection(
         centerX, centerY, x, y,
         treeX, treeY, treeX + cellSize, treeY,
       );
       if (i !== null) intersections.push(i);
-      i = findIntersection(
+      i = getLinesIntersection(
         centerX, centerY, x, y,
         treeX, treeY, treeX, treeY + cellSize,
       );
@@ -99,7 +37,7 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
     });
     visibleTrees.top.forEach((treePosition) => {
       const [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
-      const i: [number, number] = findIntersection(
+      const i: [number, number] = getLinesIntersection(
         centerX, centerY, x, y,
         treeX, treeY, treeX + cellSize, treeY,
       );
@@ -107,12 +45,12 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
     });
     visibleTrees.topRight.forEach((treePosition) => {
       const [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
-      let i: [number, number] = findIntersection(
+      let i: [number, number] = getLinesIntersection(
         centerX, centerY, x, y,
         treeX, treeY, treeX + cellSize, treeY,
       );
       if (i !== null) intersections.push(i);
-      i = findIntersection(
+      i = getLinesIntersection(
         centerX, centerY, x, y,
         treeX + cellSize, treeY, treeX + cellSize, treeY + cellSize,
       );
@@ -120,7 +58,7 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
     });
     visibleTrees.right.forEach((treePosition) => {
       const [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
-      const i: [number, number] = findIntersection(
+      const i: [number, number] = getLinesIntersection(
         centerX, centerY, x, y,
         treeX + cellSize, treeY, treeX + cellSize, treeY + cellSize,
       );
@@ -128,12 +66,12 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
     });
     visibleTrees.bottomRight.forEach((treePosition) => {
       const [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
-      let i: [number, number] = findIntersection(
+      let i: [number, number] = getLinesIntersection(
         centerX, centerY, x, y,
         treeX, treeY + cellSize, treeX + cellSize, treeY + cellSize,
       );
       if (i !== null) intersections.push(i);
-      i = findIntersection(
+      i = getLinesIntersection(
         centerX, centerY, x, y,
         treeX + cellSize, treeY, treeX + cellSize, treeY + cellSize,
       );
@@ -141,7 +79,7 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
     });
     visibleTrees.bottom.forEach((treePosition) => {
       const [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
-      const i: [number, number] = findIntersection(
+      const i: [number, number] = getLinesIntersection(
         centerX, centerY, x, y,
         treeX, treeY + cellSize, treeX + cellSize, treeY + cellSize,
       );
@@ -149,12 +87,12 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
     });
     visibleTrees.bottomLeft.forEach((treePosition) => {
       const [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
-      let i: [number, number] = findIntersection(
+      let i: [number, number] = getLinesIntersection(
         centerX, centerY, x, y,
         treeX, treeY + cellSize, treeX + cellSize, treeY + cellSize,
       );
       if (i !== null) intersections.push(i);
-      i = findIntersection(
+      i = getLinesIntersection(
         centerX, centerY, x, y,
         treeX, treeY, treeX, treeY + cellSize,
       );
@@ -162,7 +100,7 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
     });
     visibleTrees.left.forEach((treePosition) => {
       const [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
-      const i: [number, number] = findIntersection(
+      const i: [number, number] = getLinesIntersection(
         centerX, centerY, x, y,
         treeX, treeY, treeX, treeY + cellSize,
       );
@@ -170,7 +108,7 @@ export function drawVision(ctx: CanvasRenderingContext2D, w: number, h: number, 
     });
 
     const shortestRadius: number = intersections.reduce((radius, currentIntersection: [number, number]) => {
-      const newRadius = Math.sqrt(Math.abs(currentIntersection[0] - x)**2 + Math.abs(currentIntersection[1] - y)**2);
+      const newRadius = Math.hypot(currentIntersection[0] - x, currentIntersection[1] - y);
       return newRadius > radius ? newRadius : radius;
     }, 0);
     const newRadius = shortestRadius === character.visionRadiusPx ? character.visionRadiusPx : character.visionRadiusPx - shortestRadius;

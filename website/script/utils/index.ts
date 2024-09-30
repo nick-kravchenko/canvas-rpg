@@ -2,15 +2,18 @@ import { debounce } from './debounce';
 import { getCanvasCoordsByCellNumber } from './get-canvas-coords-by-cell-number';
 import { getCellByCanvasCoords } from './get-cell-by-canvas-coords';
 import { getCellCoordsByCellNumber } from './get-cell-coords-by-cell-number';
+import { getDistanceInCells } from './get-distance-in-cells';
 import { getBlockedCells } from './get-blocked-cells';
 import { getCharacterImageByDirection } from './get-character-image-by-direction';
 import { getDirectionByKey } from './get-direction-by-key';
 import { moveCharacter } from './move-character';
+import { getLinesIntersection } from './get-lines-intersection';
 import { getNeighbors } from './get-neighbors';
 import { getNextCharacterPositionByCellNumber } from './get-next-character-position-by-cell-number';
 import { getPath } from './get-path';
 import { getPerlinNoise } from './get-perlin-noise';
 import { getStateStringByEnum } from './get-state-string-by-enum';
+import { getVisibleTrees } from './get-visible-trees';
 import { imagesCharacter } from './images-character';
 import { imagesTrees } from './images-trees';
 import { setCanvasSizeToFullScreen } from './set-canvas-size-to-full-screen';
@@ -24,14 +27,17 @@ export {
   getCanvasCoordsByCellNumber,
   getCellByCanvasCoords,
   getCellCoordsByCellNumber,
+  getDistanceInCells,
   getBlockedCells,
   getCharacterImageByDirection,
   getDirectionByKey,
+  getLinesIntersection,
   getNeighbors,
   getNextCharacterPositionByCellNumber,
   getPath,
   getPerlinNoise,
   getStateStringByEnum,
+  getVisibleTrees,
   imagesCharacter,
   imagesTrees,
   moveCharacter,
