@@ -3,12 +3,13 @@ import { PositionComponent, VisionComponent } from '../component';
 import { gameState } from '../../game-state';
 import { getVisibleTrees, VisibleTrees } from '../../utils/get-visible-trees';
 import { getDistanceInCells, getLinesIntersection, getPixelCoordsByCellNumber } from '../../utils';
+import { ComponentKey } from '../../enums/component-key.enum';
 
 class VisionSystem {
   update(entities: CharacterEntity[], blockedCells: number[]) {
     entities.forEach((entity: CharacterEntity) => {
-      const vision: VisionComponent = entity.getComponent<VisionComponent>('vision');
-      const position: PositionComponent = entity.getComponent<PositionComponent>('position');
+      const vision: VisionComponent = entity.getComponent(ComponentKey.VISION);
+      const position: PositionComponent = entity.getComponent(ComponentKey.POSITION);
 
       this.updateVisionCells(vision, position, blockedCells);
     });
@@ -86,7 +87,7 @@ class VisionSystem {
   }
 
   setCharacterVisionRadius(character: CharacterEntity, newVisionRadius: number) {
-    const vision: VisionComponent = character.getComponent<VisionComponent>('vision');
+    const vision: VisionComponent = character.getComponent(ComponentKey.VISION);
     if (newVisionRadius !== vision.visionRadiusCells) {
       vision.visionRadiusCells += newVisionRadius > vision.visionRadiusCells ? 1 : -1;
       if (newVisionRadius !== vision.visionRadiusCells) {
@@ -98,7 +99,7 @@ class VisionSystem {
   }
 
   setCharacterVisionRadiusPx(character: CharacterEntity, newVisionRadius: number) {
-    const vision: VisionComponent = character.getComponent<VisionComponent>('vision');
+    const vision: VisionComponent = character.getComponent(ComponentKey.VISION);
     if (newVisionRadius !== vision.visionRadiusPx) {
       vision.visionRadiusPx += newVisionRadius > vision.visionRadiusPx ? 1 : -1;
       if (newVisionRadius !== vision.visionRadiusPx) {

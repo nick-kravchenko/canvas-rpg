@@ -1,10 +1,10 @@
 import { CharacterEntity } from '../entity';
-import { MovementComponent, PositionComponent } from '../component';
+import { MovementComponent, PlayerControlsComponent, PositionComponent } from '../component';
 import { gameState } from '../../game-state';
 import { CELL_STATE } from '../../enums/cell-state.enum';
 import { getNextCharacterPositionByCellNumber, getPath, getPixelCoordsByCellNumber } from '../../utils';
 import { DirectionKeyCodes } from '../../enums/direction-key-codes.enum';
-import { PlayerControlsComponent } from '../component/player-controls-component';
+import { ComponentKey } from '../../enums/component-key.enum';
 
 const DIRECTION_KEYS: string[] = [
   DirectionKeyCodes.KeyW,
@@ -26,8 +26,8 @@ class MovementSystem {
 
   // Handle setting the target cell and calculating the path
   setTargetCell(entity: CharacterEntity, targetCell: number|null) {
-    const position: PositionComponent = entity.getComponent<PositionComponent>('position');
-    const movement: MovementComponent = entity.getComponent<MovementComponent>('movement');
+    const position: PositionComponent = entity.getComponent(ComponentKey.POSITION);
+    const movement: MovementComponent = entity.getComponent(ComponentKey.MOVEMENT);
     if (position && movement && targetCell !== null && position.cellNumber !== targetCell && gameState.cells[targetCell] !== CELL_STATE.BLOCKED) {
       const newPath = getPath(position.cellNumber, targetCell);
       if (newPath && newPath.length) {
@@ -42,9 +42,9 @@ class MovementSystem {
 
   moveEntity(entity: CharacterEntity) {
     const { cellSize } = gameState;
-    const position: PositionComponent = entity.getComponent<PositionComponent>('position');
-    const movement: MovementComponent = entity.getComponent<MovementComponent>('movement');
-    const playerControls: PlayerControlsComponent = entity.getComponent<PlayerControlsComponent>('playerControls');
+    const position: PositionComponent = entity.getComponent(ComponentKey.POSITION);
+    const movement: MovementComponent = entity.getComponent(ComponentKey.MOVEMENT);
+    const playerControls: PlayerControlsComponent = entity.getComponent(ComponentKey.PLAYER_CONTROLS);
 
     const newCharacterPosition: number = getNextCharacterPositionByCellNumber(entity);
     const newCharacterPositionPx: [number, number] = getPixelCoordsByCellNumber(newCharacterPosition);

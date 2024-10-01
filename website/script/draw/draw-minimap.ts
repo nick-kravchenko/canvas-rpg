@@ -2,6 +2,7 @@ import { CELL_STATE } from '../enums/cell-state.enum';
 import { gameState } from '../game-state';
 import { CharacterEntity } from '../ecs/entity';
 import { PositionComponent, VisionComponent } from '../ecs/component';
+import { ComponentKey } from '../enums/component-key.enum';
 
 export function drawMinimap(
   cameraDistance: number,
@@ -18,8 +19,8 @@ export function drawMinimap(
     translateY,
   } = gameState;
 
-  const positionComponent: PositionComponent = characterEntity.getComponent<PositionComponent>('position');
-  const visionComponent: VisionComponent = characterEntity.getComponent<VisionComponent>('vision');
+  const positionComponent: PositionComponent = characterEntity.getComponent(ComponentKey.POSITION);
+  const visionComponent: VisionComponent = characterEntity.getComponent(ComponentKey.VISION);
 
   const scale = .1;
   const x: number = (w - w * scale) - 4;

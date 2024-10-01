@@ -1,15 +1,15 @@
 import { CELL_STATE } from '../enums/cell-state.enum';
 import { gameState } from '../game-state';
 import { CharacterEntity } from '../ecs/entity';
-import { MovementComponent, PositionComponent } from '../ecs/component';
-import { PlayerControlsComponent } from '../ecs/component/player-controls-component';
+import { MovementComponent, PlayerControlsComponent, PositionComponent } from '../ecs/component';
 import { DirectionKeyCodes } from '../enums/direction-key-codes.enum';
+import { ComponentKey } from '../enums/component-key.enum';
 
 export function getNextCharacterPositionByCellNumber(character: CharacterEntity): number {
   const { cells, cellsX, cellsY} = gameState;
-  const position: PositionComponent = character.getComponent<PositionComponent>('position');
-  const movement: MovementComponent = character.getComponent<MovementComponent>('movement');
-  const playerControls: PlayerControlsComponent = character.getComponent<PlayerControlsComponent>('playerControls');
+  const position: PositionComponent = character.getComponent(ComponentKey.POSITION);
+  const movement: MovementComponent = character.getComponent(ComponentKey.MOVEMENT);
+  const playerControls: PlayerControlsComponent = character.getComponent(ComponentKey.PLAYER_CONTROLS);
 
   if (movement.path.length) {
     return movement.path.find((cellNumber: number) => cellNumber !== position.cellNumber) || movement.path[0];

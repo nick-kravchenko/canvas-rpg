@@ -2,8 +2,9 @@ import { gameState } from './game-state';
 import { debounce, getCellNumberByPixelCoords } from './utils';
 import { movementSystem } from './ecs/system';
 import { playerCharacter } from './data/player';
-import { PlayerControlsComponent } from './ecs/component/player-controls-component';
 import { DirectionKeyCodes } from './enums/direction-key-codes.enum';
+import { ComponentKey } from './enums/component-key.enum';
+import { PlayerControlsComponent } from './ecs/component';
 
 export function gameHandleControls() {
   function getCoordsByMouseEvent(event: MouseEvent): [number, number] {
@@ -20,18 +21,18 @@ export function gameHandleControls() {
   });
 
   gameState.canvasElement.addEventListener('mousemove', async (e: MouseEvent) => {
-    const playerControl: PlayerControlsComponent = playerCharacter.getComponent<PlayerControlsComponent>('playerControls');
+    const playerControl: PlayerControlsComponent = playerCharacter.getComponent(ComponentKey.PLAYER_CONTROLS);
     const [x, y]: [number, number] = getCoordsByMouseEvent(e);
     playerControl.mouseOver = getCellNumberByPixelCoords(x, y);
   });
 
   window.addEventListener('keydown', (event: KeyboardEvent) => {
-    const playerControl: PlayerControlsComponent = playerCharacter.getComponent<PlayerControlsComponent>('playerControls');
+    const playerControl: PlayerControlsComponent = playerCharacter.getComponent(ComponentKey.PLAYER_CONTROLS);
     playerControl.pressedKey = event.code as DirectionKeyCodes;
   });
 
   window.addEventListener('keyup', (event: KeyboardEvent) => {
-    const playerControl: PlayerControlsComponent = playerCharacter.getComponent<PlayerControlsComponent>('playerControls');
+    const playerControl: PlayerControlsComponent = playerCharacter.getComponent(ComponentKey.PLAYER_CONTROLS);
     if (playerControl.pressedKey === event.code) {
       playerControl.pressedKey = undefined;
     }

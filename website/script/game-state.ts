@@ -43,7 +43,7 @@ class GameState {
    */
   dayNightCycle: number = .25 * 60 * 1000; // 6 minutes
   dayTimeVisionRadius: number = 6;
-  nightTimeVisionRadius: number = 3;
+  nightTimeVisionRadius: number = 4;
   isNight: boolean = false;
   time: number = 0;
 

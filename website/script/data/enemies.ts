@@ -3,13 +3,7 @@ import { getPixelCoordsByCellNumber } from '../utils';
 import { DIRECTION } from '../enums/direction.enum';
 import { gameState } from '../game-state';
 import { Npc } from '../types/npc';
-import {
-  DirectionComponent,
-  MovementComponent,
-  NpcAnchorComponent,
-  PositionComponent,
-  VisionComponent
-} from '../ecs/component';
+import { ComponentKey } from '../enums/component-key.enum';
 
 export const enemies: CharacterEntity[] = [
   {
@@ -57,33 +51,32 @@ export const enemies: CharacterEntity[] = [
 ].map((enemyData: Npc) => {
   const enemyEntity: CharacterEntity = new CharacterEntity();
 
-  enemyEntity.addComponent('vision', {
+  enemyEntity.addComponent(ComponentKey.VISION, {
     visionRadiusCells: enemyData.visionRadius,
     visionRadiusPx: enemyData.visionRadiusPx,
     visibleCells: enemyData.visible,
     exploredCells: enemyData.explored,
-  } as VisionComponent);
+  });
 
-  enemyEntity.addComponent('position', {
+  enemyEntity.addComponent(ComponentKey.POSITION, {
     cellNumber: enemyData.position,
     coordsPx: enemyData.positionPx,
-  } as PositionComponent);
+  });
 
-  enemyEntity.addComponent('movement', {
+  enemyEntity.addComponent(ComponentKey.MOVEMENT, {
     targetCell: enemyData.target,
-    pressedKey: null, // NPCs may not have key presses
     path: enemyData.path,
     speed: enemyData.speed,
-  } as MovementComponent);
+  });
 
-  enemyEntity.addComponent('direction', {
+  enemyEntity.addComponent(ComponentKey.DIRECTION, {
     direction: enemyData.direction,
-  } as DirectionComponent);
+  });
 
-  enemyEntity.addComponent('npcAnchor', {
+  enemyEntity.addComponent(ComponentKey.NPC_ANCHOR, {
     cellNumber: enemyData.anchorPosition,
     radiusCells: enemyData.wanderingRadius,
-  } as NpcAnchorComponent);
+  });
 
   return enemyEntity;
 });

@@ -4,10 +4,11 @@ import { getNeighbors, getPath } from '../../utils';
 import { gameState } from '../../game-state';
 import { CELL_STATE } from '../../enums/cell-state.enum';
 import { movementSystem } from './movement-system';
+import { ComponentKey } from '../../enums/component-key.enum';
 
 class AiSystem {
   chasePlayer(npc: CharacterEntity, targetPosition: PositionComponent) {
-    const npcPosition: PositionComponent = npc.getComponent<PositionComponent>('position');
+    const npcPosition: PositionComponent = npc.getComponent(ComponentKey.POSITION);
 
     const playerNeighbors: number[] = getNeighbors(targetPosition.cellNumber)
       .filter((cellNumber: number) => {
@@ -29,13 +30,13 @@ class AiSystem {
   }
 
   update(npcEntities: CharacterEntity[], playerCharacter: CharacterEntity) {
-    const playerPosition: PositionComponent = playerCharacter.getComponent<PositionComponent>('position');
+    const playerPosition: PositionComponent = playerCharacter.getComponent(ComponentKey.POSITION);
 
     npcEntities.forEach((npc) => {
-      const vision: VisionComponent = npc.getComponent<VisionComponent>('vision');
-      const movement: MovementComponent = npc.getComponent<MovementComponent>('movement');
-      const npcAnchor: NpcAnchorComponent = npc.getComponent<NpcAnchorComponent>('npcAnchor');
-      const npcPosition: PositionComponent = npc.getComponent<PositionComponent>('position');
+      const vision: VisionComponent = npc.getComponent(ComponentKey.VISION);
+      const movement: MovementComponent = npc.getComponent(ComponentKey.MOVEMENT);
+      const npcAnchor: NpcAnchorComponent = npc.getComponent(ComponentKey.NPC_ANCHOR);
+      const npcPosition: PositionComponent = npc.getComponent(ComponentKey.POSITION);
 
       // If player is in sight, chase the player
       if (

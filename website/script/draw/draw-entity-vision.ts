@@ -2,6 +2,7 @@ import { getPixelCoordsByCellNumber, getLinesIntersection, getVisibleTrees } fro
 import { VisibleTrees } from '../utils/get-visible-trees';
 import { gameState } from '../game-state';
 import { CharacterEntity } from '../ecs/entity';
+import { ComponentKey } from '../enums/component-key.enum';
 import { PositionComponent, VisionComponent } from '../ecs/component';
 
 export function drawEntityVision(blockedCells: number[], character: CharacterEntity, color: string) {
@@ -15,8 +16,8 @@ export function drawEntityVision(blockedCells: number[], character: CharacterEnt
     h,
   } = gameState;
 
-  const vision = character.getComponent<VisionComponent>('vision');
-  const position = character.getComponent<PositionComponent>('position');
+  const vision: VisionComponent = character.getComponent(ComponentKey.VISION);
+  const position: PositionComponent = character.getComponent(ComponentKey.POSITION);
 
   let segments: number = 1.875 * vision.visionRadiusPx;
   let [x, y]: [number, number] = position.coordsPx;

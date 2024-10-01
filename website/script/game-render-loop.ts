@@ -1,7 +1,6 @@
-import { MovementComponent, PositionComponent, VisionComponent } from './ecs/component';
+import { MovementComponent, PlayerControlsComponent, PositionComponent, VisionComponent } from './ecs/component';
 import { playerCharacter } from './data/player';
 import { gameState } from './game-state';
-import { PlayerControlsComponent } from './ecs/component/player-controls-component';
 import {
   drawBackground,
   drawClock,
@@ -18,6 +17,7 @@ import { CELL_STATE } from './enums/cell-state.enum';
 import { enemies } from './data/enemies';
 import { CharacterEntity } from './ecs/entity';
 import { imagesTrees, treesNew } from './data';
+import { ComponentKey } from './enums/component-key.enum';
 
 const start = performance.now();
 const treeCells: number[] = treesNew;
@@ -28,7 +28,7 @@ const treeImages: { [key: number]: HTMLImageElement } = treeCells.reduce((acc, c
  * Check if cell is in screen bounds
  */
 const isWithinScreenBounds = (cellNumber: number) => {
-  const playerCharacterPosition: PositionComponent = playerCharacter.getComponent<PositionComponent>('position');
+  const playerCharacterPosition: PositionComponent = playerCharacter.getComponent(ComponentKey.POSITION);
   const visionRangeX: number = Math.round(gameState.cellsX * gameState.cameraDistance);
   const visionRangeY: number = Math.round(gameState.cellsY * gameState.cameraDistance);
   const inVisionVertically: boolean = Math.abs(Math.floor(cellNumber / gameState.cellsX) - Math.floor(playerCharacterPosition.cellNumber / gameState.cellsX)) - visionRangeX / gameState.cameraDistance <= visionRangeY;
@@ -37,10 +37,10 @@ const isWithinScreenBounds = (cellNumber: number) => {
 };
 
 function draw(tick: number) {
-  const playerCharacterPosition: PositionComponent = playerCharacter.getComponent<PositionComponent>('position');
-  const playerCharacterMovement: MovementComponent = playerCharacter.getComponent<MovementComponent>('movement');
-  const playerCharacterVision: VisionComponent = playerCharacter.getComponent<VisionComponent>('vision');
-  const playerCharacterControls: PlayerControlsComponent = playerCharacter.getComponent<PlayerControlsComponent>('playerControls');
+  const playerCharacterPosition: PositionComponent = playerCharacter.getComponent(ComponentKey.POSITION);
+  const playerCharacterMovement: MovementComponent = playerCharacter.getComponent(ComponentKey.MOVEMENT);
+  const playerCharacterVision: VisionComponent = playerCharacter.getComponent(ComponentKey.VISION);
+  const playerCharacterControls: PlayerControlsComponent = playerCharacter.getComponent(ComponentKey.PLAYER_CONTROLS);
 
   gameState.setCtxScale(playerCharacterPosition);
 
@@ -65,7 +65,7 @@ function draw(tick: number) {
       if (cellNumber === playerCharacterPosition.cellNumber) drawEntityCharacter(playerCharacter);
 
       enemies.forEach((enemy: CharacterEntity) => {
-        const enemyPosition: PositionComponent = enemy.getComponent<PositionComponent>('position');
+        const enemyPosition: PositionComponent = enemy.getComponent(ComponentKey.POSITION);
         if (
           cellNumber === enemyPosition.cellNumber
           && (gameState.ignoreVision || playerCharacterVision.visibleCells.includes(cellNumber))

@@ -1,31 +1,29 @@
 import { CharacterEntity } from '../ecs/entity';
 import { gameState } from '../game-state';
-import { DirectionComponent, MovementComponent, PositionComponent, VisionComponent } from '../ecs/component';
 import { getPixelCoordsByCellNumber } from '../utils';
 import { DIRECTION } from '../enums/direction.enum';
-import { PlayerControlsComponent } from '../ecs/component/player-controls-component';
+import { ComponentKey } from '../enums/component-key.enum';
 
 export const playerCharacter: CharacterEntity = new CharacterEntity();
-playerCharacter.addComponent('vision', {
+playerCharacter.addComponent(ComponentKey.VISION, {
   visionRadiusCells: gameState.dayTimeVisionRadius,
   visionRadiusPx: gameState.dayTimeVisionRadius * gameState.cellSize,
   visibleCells: [],
   exploredCells: [],
-} as VisionComponent);
-playerCharacter.addComponent('position', {
+});
+playerCharacter.addComponent(ComponentKey.POSITION, {
   cellNumber: 272,
   coordsPx: getPixelCoordsByCellNumber(272),
-} as PositionComponent);
-playerCharacter.addComponent('movement', {
+});
+playerCharacter.addComponent(ComponentKey.MOVEMENT, {
   targetCell: null,
-  pressedKey: null,
   path: [],
   speed: 2,
-} as MovementComponent);
-playerCharacter.addComponent('direction', {
+});
+playerCharacter.addComponent(ComponentKey.DIRECTION, {
   direction: DIRECTION.DOWN,
-} as DirectionComponent);
-playerCharacter.addComponent('playerControls', {
+});
+playerCharacter.addComponent(ComponentKey.PLAYER_CONTROLS, {
   pressedKey: null,
   mouseOver: null,
-} as PlayerControlsComponent);
+});
