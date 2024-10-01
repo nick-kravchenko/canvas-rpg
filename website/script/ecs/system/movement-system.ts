@@ -5,6 +5,7 @@ import { CELL_STATE } from '../../enums/cell-state.enum';
 import { getNeighbors, getNextCharacterPositionByCellNumber, getPath, getPixelCoordsByCellNumber } from '../../utils';
 import { DirectionKeyCodes } from '../../enums/direction-key-codes.enum';
 import { ComponentKey } from '../../enums/component-key.enum';
+import { enemiesStorage } from '../../data/enemies-storage';
 
 const DIRECTION_KEYS: string[] = [
   DirectionKeyCodes.KeyW,
@@ -29,9 +30,13 @@ class MovementSystem {
     const position: PositionComponent = entity.getComponent(ComponentKey.POSITION);
     const movement: MovementComponent = entity.getComponent(ComponentKey.MOVEMENT);
     if (position && movement && targetCell !== null && position.cellNumber !== targetCell && gameState.cells[targetCell] !== CELL_STATE.BLOCKED) {
-      const newPath = getPath(position.cellNumber, targetCell);
-      if (newPath && newPath.length) {
-        movement.path = newPath;
+      const path = getPath(
+        position.cellNumber,
+        targetCell,
+        enemiesStorage.enemies.map(enemy => enemy.getComponent(ComponentKey.POSITION).cellNumber)
+      );
+      if (path && path.length) {
+        movement.path = path;
         movement.targetCell = targetCell;
       }
     } else {
@@ -79,7 +84,11 @@ class MovementSystem {
       });
 
     const closestNeighborPath: number[] = playerNeighbors.reduce((prevPath: number[]|null, cur: number) => {
-      const newPath: number[] = getPath(movingEntityPosition.cellNumber, cur);
+      const newPath: number[] = getPath(
+        movingEntityPosition.cellNumber,
+        cur,
+        enemiesStorage.enemies.map(enemy => enemy.getComponent(ComponentKey.POSITION).cellNumber)
+      );
       return !prevPath || (newPath.length < prevPath.length) ?  newPath : prevPath;
     }, null);
 
@@ -88,7 +97,6 @@ class MovementSystem {
     if (isNearPlayer) { return; }
 
     if (closestNeighborPath?.length) {
-      console.log('calling 2');
       movementSystem.setTargetCell(movingEntity, closestNeighborPath[closestNeighborPath.length  - 1]);
     }
   }

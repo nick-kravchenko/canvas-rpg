@@ -27,7 +27,6 @@ class AiSystem {
         !vision.visibleCells.includes(playerPosition.cellNumber) &&
         npcAnchor.cellNumber !== npcPosition.cellNumber
       ) {
-        console.log('calling 1');
         movementSystem.setTargetCell(npcEntity, npcAnchor.cellNumber);
       }
     });
