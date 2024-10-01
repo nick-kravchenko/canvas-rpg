@@ -10,9 +10,6 @@ export class CharacterEntity {
   }
 
   getComponent<T>(name: string): T {
-    if (!this.components.has(name)) {
-      throw new Error(`Component ${name} not found`);
-    }
     return this.components.get(name);
   }
 }

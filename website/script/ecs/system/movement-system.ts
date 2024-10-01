@@ -2,8 +2,9 @@ import { CharacterEntity } from '../entity';
 import { MovementComponent, PositionComponent } from '../component';
 import { gameState } from '../../game-state';
 import { CELL_STATE } from '../../enums/cell-state.enum';
-import { getPath, getPixelCoordsByCellNumber } from '../../utils';
+import { getNextCharacterPositionByCellNumber, getPath, getPixelCoordsByCellNumber } from '../../utils';
 import { DirectionKeyCodes } from '../../enums/direction-key-codes.enum';
+import { PlayerControlsComponent } from '../component/player-controls-component';
 
 const DIRECTION_KEYS: string[] = [
   DirectionKeyCodes.KeyW,
@@ -19,13 +20,7 @@ const DIRECTION_KEYS: string[] = [
 class MovementSystem {
   update(entities: CharacterEntity[]) {
     entities.forEach(entity => {
-      const position = entity.getComponent<PositionComponent>('position');
-      const movement = entity.getComponent<MovementComponent>('movement');
-
-      if (position && movement) {
-        // Continue moving the entity along its path
-        this.moveEntity(position, movement, movement.pressedKey);
-      }
+      this.moveEntity(entity);
     });
   }
 
@@ -45,12 +40,13 @@ class MovementSystem {
     }
   }
 
-  moveEntity(position: PositionComponent, movement: MovementComponent, pressedKey: string) {
-    const {
-      cellSize,
-    } = gameState;
+  moveEntity(entity: CharacterEntity) {
+    const { cellSize } = gameState;
+    const position: PositionComponent = entity.getComponent<PositionComponent>('position');
+    const movement: MovementComponent = entity.getComponent<MovementComponent>('movement');
+    const playerControls: PlayerControlsComponent = entity.getComponent<PlayerControlsComponent>('playerControls');
 
-    const newCharacterPosition: number = movement.path[0];
+    const newCharacterPosition: number = getNextCharacterPositionByCellNumber(entity);
     const newCharacterPositionPx: [number, number] = getPixelCoordsByCellNumber(newCharacterPosition);
 
     const deltaX: number = Math.abs(position.coordsPx[0] - newCharacterPositionPx[0]);
@@ -66,7 +62,7 @@ class MovementSystem {
       movement.path.shift(); // Move to the next cell in the path
     }
 
-    if (DIRECTION_KEYS.includes(pressedKey)) {
+    if (DIRECTION_KEYS.includes(playerControls?.pressedKey)) {
       movement.path = []; // Clear the path if a key is pressed for manual movement
     }
   }

@@ -27,6 +27,8 @@ import { imagesTrees, treesNew } from './data';
 import { CharacterEntity } from './ecs/entity';
 import { DirectionComponent, MovementComponent, NpcAnchorComponent, PositionComponent, VisionComponent } from './ecs/component';
 import { movementSystem, visionSystem } from './ecs/system';
+import { PlayerControlsComponent } from './ecs/component/player-controls-component';
+import { DirectionKeyCodes } from './enums/direction-key-codes.enum';
 
 (async () => {
   let fps: number;
@@ -67,6 +69,10 @@ import { movementSystem, visionSystem } from './ecs/system';
         playerCharacter.addComponent('direction', {
           direction: DIRECTION.DOWN,
         } as DirectionComponent);
+        playerCharacter.addComponent('playerControls', {
+          pressedKey: null,
+          mouseOver: null,
+        } as PlayerControlsComponent);
 
   const enemies: CharacterEntity[] = [
     {
@@ -180,6 +186,7 @@ import { movementSystem, visionSystem } from './ecs/system';
     const playerCharacterPosition: PositionComponent = playerCharacter.getComponent<PositionComponent>('position');
     const playerCharacterMovement: MovementComponent = playerCharacter.getComponent<MovementComponent>('movement');
     const playerCharacterVision: VisionComponent = playerCharacter.getComponent<VisionComponent>('vision');
+    const playerCharacterControls: PlayerControlsComponent = playerCharacter.getComponent<PlayerControlsComponent>('playerControls');
 
     gameState.setCtxScale(playerCharacterPosition);
 
@@ -218,7 +225,7 @@ import { movementSystem, visionSystem } from './ecs/system';
     let alpha: number = .4 + (.2 / visiblePercent);
     drawEntityVision(treeCells, playerCharacter, `rgba(0, 0, 0, ${alpha})`);
 
-    drawPointer(pointerTarget, tick);
+    drawPointer(playerCharacterControls.mouseOver, tick);
 
     drawDebugGrid();
 
@@ -313,21 +320,22 @@ import { movementSystem, visionSystem } from './ecs/system';
     });
 
     gameState.canvasElement.addEventListener('mousemove', async (e: MouseEvent) => {
+      const playerControl: PlayerControlsComponent = playerCharacter.getComponent<PlayerControlsComponent>('playerControls');
       const [x, y]: [number, number] = getCoordsByMouseEvent(e);
-      pointerTarget = getCellNumberByPixelCoords(x, y);
+      playerControl.mouseOver = getCellNumberByPixelCoords(x, y);
     });
 
-    // window.addEventListener('keydown', (event: KeyboardEvent) => {
-    //   pressedKey = event.code;
-    //   character.direction = getDirectionByKey(event.code);
-    // });
-    //
-    // window.addEventListener('keyup', (event: KeyboardEvent) => {
-    //   if (pressedKey === event.code) {
-    //     pressedKey = undefined;
-    //     character.direction = null;
-    //   }
-    // });
+    window.addEventListener('keydown', (event: KeyboardEvent) => {
+      const playerControl: PlayerControlsComponent = playerCharacter.getComponent<PlayerControlsComponent>('playerControls');
+      playerControl.pressedKey = event.code as DirectionKeyCodes;
+    });
+
+    window.addEventListener('keyup', (event: KeyboardEvent) => {
+      const playerControl: PlayerControlsComponent = playerCharacter.getComponent<PlayerControlsComponent>('playerControls');
+      if (playerControl.pressedKey === event.code) {
+        playerControl.pressedKey = undefined;
+      }
+    });
 
     const debounceChangeCameraDistance = debounce(async (event: WheelEvent) => {
       event.preventDefault();
