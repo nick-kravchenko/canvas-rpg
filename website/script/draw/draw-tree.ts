@@ -1,15 +1,15 @@
 import { getPixelCoordsByCellNumber } from '../utils';
-import { Character } from '../types/character';
 import { gameState } from '../game-state';
+import { PositionComponent } from '../ecs/component';
 
-function isOverlappingCharacter(cellNumber: number, cellsX: number, cellSize: number, treeHeight: number, character: Character): boolean {
+function isOverlappingCharacter(cellNumber: number, cellsX: number, cellSize: number, treeHeight: number, positionComponent: PositionComponent): boolean {
   return treeHeight > cellSize
-    && cellNumber % cellsX === character.position % cellsX
-    && cellNumber > character.position
-    && (Math.floor(cellNumber / cellsX) - Math.floor(character.position / cellsX)) < treeHeight / cellSize;
+    && cellNumber % cellsX === positionComponent.cellNumber % cellsX
+    && cellNumber > positionComponent.cellNumber
+    && (Math.floor(cellNumber / cellsX) - Math.floor(positionComponent.cellNumber / cellsX)) < treeHeight / cellSize;
 }
 
-export function drawTree(treeImages: { [key: number]: HTMLImageElement }, cellNumber: number, character: Character) {
+export function drawTree(treeImages: { [key: number]: HTMLImageElement }, cellNumber: number, positionComponent: PositionComponent) {
   const {
     ctx,
     cellsX,
@@ -19,7 +19,7 @@ export function drawTree(treeImages: { [key: number]: HTMLImageElement }, cellNu
   const [x, y]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
   const treeImage: HTMLImageElement = treeImages[cellNumber];
   ctx.save();
-  if (isOverlappingCharacter(cellNumber, cellsX, cellSize, treeImage.height, character)) {
+  if (isOverlappingCharacter(cellNumber, cellsX, cellSize, treeImage.height, positionComponent)) {
     ctx.globalAlpha = .5;
   }
   ctx.drawImage(

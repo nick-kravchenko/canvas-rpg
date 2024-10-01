@@ -1,9 +1,10 @@
 import { getPixelCoordsByCellNumber, getLinesIntersection, getVisibleTrees } from '../utils';
-import { Character } from '../types/character';
 import { VisibleTrees } from '../utils/get-visible-trees';
 import { gameState } from '../game-state';
+import { CharacterEntity } from '../ecs/entity';
+import { PositionComponent, VisionComponent } from '../ecs/component';
 
-export function drawVision(blockedCells: number[], character: Character, color: string) {
+export function drawEntityVision(blockedCells: number[], character: CharacterEntity, color: string) {
   if (gameState.ignoreVision) return;
 
   const {
@@ -13,13 +14,17 @@ export function drawVision(blockedCells: number[], character: Character, color: 
     w,
     h,
   } = gameState;
-  let segments: number = 1.875 * character.visionRadiusPx;
-  let [x, y]: [number, number] = character.positionPx;
+
+  const vision = character.getComponent<VisionComponent>('vision');
+  const position = character.getComponent<PositionComponent>('position');
+
+  let segments: number = 1.875 * vision.visionRadiusPx;
+  let [x, y]: [number, number] = position.coordsPx;
   let centerX: number = x + (cellSize / 2);
   let centerY: number = y + (cellSize / 2);
   let firstPoint: [number, number];
 
-  let visibleTrees: VisibleTrees = getVisibleTrees(blockedCells, cellsX, cellSize, character.position, x, y, centerX, centerY, character.visionRadiusPx);
+  let visibleTrees: VisibleTrees = getVisibleTrees(blockedCells, cellsX, cellSize, position.cellNumber, x, y, centerX, centerY, vision.visionRadiusPx);
 
   ctx.save();
   ctx.beginPath();
@@ -29,8 +34,8 @@ export function drawVision(blockedCells: number[], character: Character, color: 
   ctx.lineTo(w, h / 2);
   for (let i: number = 0; i <= segments; i++) {
     const angle: number = (i / segments) * 2 * Math.PI;
-    const x: number = centerX + Math.cos(angle) * character.visionRadiusPx;
-    const y: number = centerY + Math.sin(angle) * character.visionRadiusPx;
+    const x: number = centerX + Math.cos(angle) * vision.visionRadiusPx;
+    const y: number = centerY + Math.sin(angle) * vision.visionRadiusPx;
     const intersections: [number, number][] = [];
     visibleTrees.topLeft.forEach((treePosition) => {
       const [treeX, treeY]: [number, number] = getPixelCoordsByCellNumber(treePosition);
@@ -121,7 +126,7 @@ export function drawVision(blockedCells: number[], character: Character, color: 
       const newRadius = Math.hypot(currentIntersection[0] - x, currentIntersection[1] - y);
       return newRadius > radius ? newRadius : radius;
     }, 0);
-    const newRadius = shortestRadius === character.visionRadiusPx ? character.visionRadiusPx : character.visionRadiusPx - shortestRadius;
+    const newRadius = shortestRadius === vision.visionRadiusPx ? vision.visionRadiusPx : vision.visionRadiusPx - shortestRadius;
     if (i === 0) {
       firstPoint = [centerX + Math.cos(angle) * newRadius, centerY + Math.sin(angle) * newRadius];
       ctx.lineTo(centerX + Math.cos(angle) * newRadius, centerY + Math.sin(angle) * newRadius);

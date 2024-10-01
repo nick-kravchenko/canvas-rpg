@@ -1,10 +1,11 @@
-import { Character } from '../types/character';
 import { CELL_STATE } from '../enums/cell-state.enum';
 import { gameState } from '../game-state';
+import { CharacterEntity } from '../ecs/entity';
+import { PositionComponent, VisionComponent } from '../ecs/component';
 
 export function drawMinimap(
   cameraDistance: number,
-  character: Character,
+  characterEntity: CharacterEntity,
 ) {
   const {
     ctx,
@@ -16,6 +17,9 @@ export function drawMinimap(
     translateX,
     translateY,
   } = gameState;
+
+  const positionComponent: PositionComponent = characterEntity.getComponent<PositionComponent>('position');
+  const visionComponent: VisionComponent = characterEntity.getComponent<VisionComponent>('vision');
 
   const scale = .1;
   const x: number = (w - w * scale) - 4;
@@ -39,9 +43,9 @@ export function drawMinimap(
     ctx.save();
     const offsetX = cellNumber % cellsX;
     const offsetY = Math.floor(cellNumber / cellsX);
-    if (!character.explored.includes(cellNumber)) {
+    if (!visionComponent.exploredCells.includes(cellNumber)) {
       ctx.fillStyle = '#000';
-    } else if (cellNumber === character.position) {
+    } else if (cellNumber === positionComponent.cellNumber) {
       ctx.fillStyle = '#fff';
     } else if (cells[cellNumber] === CELL_STATE.BLOCKED) {
       ctx.fillStyle = '#673600';

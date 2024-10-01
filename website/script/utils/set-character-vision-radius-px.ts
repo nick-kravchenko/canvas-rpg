@@ -1,7 +1,7 @@
 import { Character } from '../types/character';
 import { gameState } from '../game-state';
 
-export function setCharacterVisionRadiusPx(character: Character, blockedCells: number[], newVisionRadius: number) {
+export function setCharacterVisionRadiusPx(character: Character, newVisionRadius: number) {
   const {
     cellSize,
   } = gameState;
@@ -10,7 +10,7 @@ export function setCharacterVisionRadiusPx(character: Character, blockedCells: n
     character.visionRadiusPx += newVisionRadius > character.visionRadiusPx ? 1 : -1;
     if (newVisionRadius !== character.visionRadiusPx) {
       setTimeout(() => {
-        setCharacterVisionRadiusPx(character, blockedCells, newVisionRadius);
+        setCharacterVisionRadiusPx(character, newVisionRadius);
       }, 256 / cellSize);
     }
   }

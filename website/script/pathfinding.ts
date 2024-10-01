@@ -1,41 +1,37 @@
 import {
   debounce,
   getCellNumberByPixelCoords,
-  getDirectionByKey,
   getNeighbors,
   getPath,
   getPixelCoordsByCellNumber,
-  moveCharacter,
-  setCharacterVisionRadius,
-  setCharacterVisionRadiusPx,
-  updateCharacterVision,
 } from './utils';
 import {
   drawBackground,
-  drawCharacter,
   drawClock,
   drawDebugData,
   drawDebugGrid,
-  drawEnemy,
+  drawEntityCharacter,
+  drawEntityEnemy,
+  drawEntityVision,
   drawGround,
   drawMinimap,
   drawPath,
   drawPointer,
   drawTree,
-  drawVision,
 } from './draw';
 import { gameState } from './game-state';
 import { CELL_STATE } from './enums/cell-state.enum';
 import { DIRECTION } from './enums/direction.enum';
-import { Character } from './types/character';
 import { Npc } from './types/npc';
 import { imagesTrees, treesNew } from './data';
+import { CharacterEntity } from './ecs/entity';
+import { DirectionComponent, MovementComponent, NpcAnchorComponent, PositionComponent, VisionComponent } from './ecs/component';
+import { movementSystem, visionSystem } from './ecs/system';
 
 (async () => {
   let fps: number;
   let requestTime: number;
   let pointerTarget: number|undefined;
-  let pressedKey: string;
 
   const treeCells: number[] = treesNew;
   const getRandomTreeImage = (): HTMLImageElement => imagesTrees[Math.floor(Math.random() * imagesTrees.length)];
@@ -51,22 +47,28 @@ import { imagesTrees, treesNew } from './data';
    */
   gameState.setCanvasSizes();
 
-  /**
-   * Create player character and enemies
-   */
-  const character: Character = {
-    position: Math.round(((gameState.cellsX * gameState.cellsY) / 2) + gameState.cellsX / 2),
-    positionPx: getPixelCoordsByCellNumber(Math.round(((gameState.cellsX * gameState.cellsY) / 2) + gameState.cellsX / 2)),
-    target: 0,
-    path: [],
-    explored: [],
-    visible: [],
-    direction: DIRECTION.DOWN,
-    speed: 2,
-    visionRadius: gameState.dayTimeVisionRadius,
-    visionRadiusPx: gameState.dayTimeVisionRadius * gameState.cellSize,
-  };
-  const enemies: Npc[] = [
+  const playerCharacter: CharacterEntity = new CharacterEntity();
+        playerCharacter.addComponent('vision', {
+          visionRadiusCells: gameState.dayTimeVisionRadius,
+          visionRadiusPx: gameState.dayTimeVisionRadius * gameState.cellSize,
+          visibleCells: [],
+          exploredCells: [],
+        } as VisionComponent);
+        playerCharacter.addComponent('position', {
+          cellNumber: 272,
+          coordsPx: getPixelCoordsByCellNumber(272),
+        } as PositionComponent);
+        playerCharacter.addComponent('movement', {
+          targetCell: null,
+          pressedKey: null,
+          path: [],
+          speed: 2,
+        } as MovementComponent);
+        playerCharacter.addComponent('direction', {
+          direction: DIRECTION.DOWN,
+        } as DirectionComponent);
+
+  const enemies: CharacterEntity[] = [
     {
       position: 66,
       positionPx: getPixelCoordsByCellNumber(66),
@@ -109,22 +111,56 @@ import { imagesTrees, treesNew } from './data';
       anchorPosition: 222,
       wanderingRadius: 4,
     },
-  ];
+  ].map((enemyData: Npc) => {
+    const enemyEntity: CharacterEntity = new CharacterEntity();
+
+    enemyEntity.addComponent('vision', {
+      visionRadiusCells: enemyData.visionRadius,
+      visionRadiusPx: enemyData.visionRadiusPx,
+      visibleCells: enemyData.visible,
+      exploredCells: enemyData.explored,
+    } as VisionComponent);
+
+    enemyEntity.addComponent('position', {
+      cellNumber: enemyData.position,
+      coordsPx: enemyData.positionPx,
+    } as PositionComponent);
+
+    enemyEntity.addComponent('movement', {
+      targetCell: enemyData.target,
+      pressedKey: null, // NPCs may not have key presses
+      path: enemyData.path,
+      speed: enemyData.speed,
+    } as MovementComponent);
+
+    enemyEntity.addComponent('direction', {
+      direction: enemyData.direction,
+    } as DirectionComponent);
+
+    enemyEntity.addComponent('npcAnchor', {
+      cellNumber: enemyData.anchorPosition,
+      radiusCells: enemyData.wanderingRadius,
+    } as NpcAnchorComponent);
+
+    return enemyEntity;
+  });
 
   /**
    * Forces npc to chase player.
    */
-  function chasePlayer(npc: Npc, player: Character) {
-    const playerNeighbors: number[] = getNeighbors(player.position).filter((cellNumber: number) => gameState.cells[cellNumber] !== CELL_STATE.BLOCKED);
+  function chasePlayer(npc: CharacterEntity, targetPosition: PositionComponent) {
+    const npcPosition: PositionComponent = npc.getComponent<PositionComponent>('position');
+
+    const playerNeighbors: number[] = getNeighbors(targetPosition.cellNumber)
+      .filter((cellNumber: number) => gameState.cells[cellNumber] !== CELL_STATE.BLOCKED);
 
     const closestNeighborPath: number[] = playerNeighbors.reduce((prevPath: number[]|null, cur: number) => {
-      const newPath: number[] = getPath(npc.position, cur);
+      const newPath: number[] = getPath(npcPosition.cellNumber, cur);
       return !prevPath || (newPath.length < prevPath.length) ?  newPath : prevPath;
     }, null);
 
     if (closestNeighborPath && typeof closestNeighborPath[0] === 'number' && closestNeighborPath.length) {
-      npc.target = closestNeighborPath[closestNeighborPath.length  - 1];
-      npc.path = closestNeighborPath.slice(1);
+      movementSystem.setTargetCell(npc, closestNeighborPath[closestNeighborPath.length  - 1]);
     }
   }
 
@@ -132,15 +168,20 @@ import { imagesTrees, treesNew } from './data';
    * Check if cell is in screen bounds
    */
   const isWithinScreenBounds = (cellNumber: number) => {
+    const playerCharacterPosition: PositionComponent = playerCharacter.getComponent<PositionComponent>('position');
     const visionRangeX: number = Math.round(gameState.cellsX * gameState.cameraDistance);
     const visionRangeY: number = Math.round(gameState.cellsY * gameState.cameraDistance);
-    const inVisionVertically: boolean = Math.abs(Math.floor(cellNumber / gameState.cellsX) - Math.floor(character.position / gameState.cellsX)) - visionRangeX / gameState.cameraDistance <= visionRangeY;
-    const inVisionHorizontally: boolean = Math.abs(Math.floor(cellNumber % gameState.cellsX) - Math.floor(character.position % gameState.cellsX)) - visionRangeY / gameState.cameraDistance <= visionRangeX;
+    const inVisionVertically: boolean = Math.abs(Math.floor(cellNumber / gameState.cellsX) - Math.floor(playerCharacterPosition.cellNumber / gameState.cellsX)) - visionRangeX / gameState.cameraDistance <= visionRangeY;
+    const inVisionHorizontally: boolean = Math.abs(Math.floor(cellNumber % gameState.cellsX) - Math.floor(playerCharacterPosition.cellNumber % gameState.cellsX)) - visionRangeY / gameState.cameraDistance <= visionRangeX;
     return inVisionVertically && inVisionHorizontally;
   };
 
   function draw(tick: number) {
-    gameState.setCtxScale(character);
+    const playerCharacterPosition: PositionComponent = playerCharacter.getComponent<PositionComponent>('position');
+    const playerCharacterMovement: MovementComponent = playerCharacter.getComponent<MovementComponent>('movement');
+    const playerCharacterVision: VisionComponent = playerCharacter.getComponent<VisionComponent>('vision');
+
+    gameState.setCtxScale(playerCharacterPosition);
 
     drawBackground('hsla(100, 100%, 75%, .5)');
 
@@ -150,25 +191,32 @@ import { imagesTrees, treesNew } from './data';
     for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {
       if (isWithinScreenBounds(cellNumber)) drawGround(cellNumber)
     }
+
+    drawPath(playerCharacterMovement.path);
+
     for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {
       if (isWithinScreenBounds(cellNumber)) {
         const cellState: number = gameState.cells[cellNumber];
-        if (gameState.ignoreVision || character.explored.includes(cellNumber)) {
-          if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, character);
+        if (gameState.ignoreVision || playerCharacterVision.exploredCells.includes(cellNumber)) {
+          if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
         }
-        if (cellNumber === character.position) drawCharacter(character, tick);
-        enemies.forEach((enemy: Npc) => {
-          if (cellNumber === enemy.position && (gameState.ignoreVision || character.visible.includes(cellNumber))) drawEnemy(enemy, character, tick);
+
+        if (cellNumber === playerCharacterPosition.cellNumber) drawEntityCharacter(playerCharacter);
+
+        enemies.forEach((enemy: CharacterEntity) => {
+          const enemyPosition: PositionComponent = enemy.getComponent<PositionComponent>('position');
+          if (
+            cellNumber === enemyPosition.cellNumber
+            && (gameState.ignoreVision || playerCharacterVision.visibleCells.includes(cellNumber))
+          ) drawEntityEnemy(enemy);
         });
       }
     }
 
-    drawPath(character.path);
-
     let maxVisionPx: number = gameState.dayTimeVisionRadius * gameState.cellSize;
-    let visiblePercent: number = character.visionRadiusPx / maxVisionPx;
+    let visiblePercent: number = playerCharacterVision.visionRadiusPx / maxVisionPx;
     let alpha: number = .4 + (.2 / visiblePercent);
-    drawVision(treeCells, character, `rgba(0, 0, 0, ${alpha})`);
+    drawEntityVision(treeCells, playerCharacter, `rgba(0, 0, 0, ${alpha})`);
 
     drawPointer(pointerTarget, tick);
 
@@ -180,7 +228,7 @@ import { imagesTrees, treesNew } from './data';
     gameState.restoreCtxScale();
 
     drawClock();
-    drawMinimap(gameState.cameraDistance, character);
+    drawMinimap(gameState.cameraDistance, playerCharacter);
     drawDebugData({
       FPS: fps,
       time: Math.round(gameState.time),
@@ -189,6 +237,7 @@ import { imagesTrees, treesNew } from './data';
   }
 
   function gameLoop() {
+    const playerCharacterPosition: PositionComponent = playerCharacter.getComponent<PositionComponent>('position');
     /**
      * Update game time
      */
@@ -202,28 +251,31 @@ import { imagesTrees, treesNew } from './data';
       gameState.setIsNight(newIsNight);
       const newCellsVisionRadius: number = newIsNight ? gameState.nightTimeVisionRadius : gameState.dayTimeVisionRadius;
       const newPxVisionRadius: number = newCellsVisionRadius * gameState.cellSize;
-      setCharacterVisionRadius(character, treeCells, newCellsVisionRadius);
-      setCharacterVisionRadiusPx(character, treeCells, newPxVisionRadius);
+      visionSystem.setCharacterVisionRadius(playerCharacter, newCellsVisionRadius);
+      visionSystem.setCharacterVisionRadiusPx(playerCharacter, newPxVisionRadius);
     }
-
-    /**
-     * Character movement/vision behavior
-     */
-    moveCharacter(character, pressedKey);
-    updateCharacterVision(character, treeCells);
 
     /**
      * Enemies movement/vision/chase behavior
      */
     for (let enemy of enemies) {
-      if (enemy.visible.includes(character.position)) chasePlayer(enemy, character);
-      if (enemy.path.length) moveCharacter(enemy, null);
-      if (!enemy.path.length && !enemy.visible.includes(character.position) && enemy.anchorPosition !== enemy.position) {
-        enemy.target = enemy.anchorPosition;
-        enemy.path = getPath(enemy.position, enemy.target);
+      const enemyVision: VisionComponent = enemy.getComponent<VisionComponent>('vision');
+      const enemyMovement: MovementComponent = enemy.getComponent<MovementComponent>('movement');
+      const enemyNpcAnchor: NpcAnchorComponent = enemy.getComponent<NpcAnchorComponent>('npcAnchor')
+      const enemyPosition: PositionComponent = enemy.getComponent<PositionComponent>('position');
+
+      if (enemyVision.visibleCells.includes(playerCharacterPosition.cellNumber)) chasePlayer(enemy, playerCharacterPosition);
+      if (
+        !enemyMovement.path.length
+        && !enemyVision.visibleCells.includes(playerCharacterPosition.cellNumber)
+        && enemyNpcAnchor.cellNumber !== enemyPosition.cellNumber
+      ) {
+        movementSystem.setTargetCell(enemy, enemyNpcAnchor.cellNumber);
       }
-      updateCharacterVision(enemy, treeCells);
     }
+
+    movementSystem.update([playerCharacter, ...enemies]);
+    visionSystem.update([playerCharacter, ...enemies], treeCells);
 
     /**
      * Call gameLoop recursively in gameTickRate ms
@@ -256,11 +308,8 @@ import { imagesTrees, treesNew } from './data';
 
     gameState.canvasElement.addEventListener('click', async (e: MouseEvent) => {
       const [x, y]: [number, number] = getCoordsByMouseEvent(e);
-      character.target = getCellNumberByPixelCoords(x, y);
-      if (character.position !== character.target && gameState.cells[character.target] !== CELL_STATE.BLOCKED) {
-        const newPath = getPath(character.position, character.target);
-        if (newPath && typeof newPath[0] === 'number' && newPath.length) character.path = newPath;
-      }
+      const targetCell: number = getCellNumberByPixelCoords(x, y);
+      movementSystem.setTargetCell(playerCharacter, targetCell);
     });
 
     gameState.canvasElement.addEventListener('mousemove', async (e: MouseEvent) => {
@@ -268,24 +317,23 @@ import { imagesTrees, treesNew } from './data';
       pointerTarget = getCellNumberByPixelCoords(x, y);
     });
 
-    window.addEventListener('keydown', (event: KeyboardEvent) => {
-      pressedKey = event.code;
-      character.direction = getDirectionByKey(event.code);
-    });
-
-    window.addEventListener('keyup', (event: KeyboardEvent) => {
-      if (pressedKey === event.code) {
-        pressedKey = undefined;
-        character.direction = null;
-      }
-    });
+    // window.addEventListener('keydown', (event: KeyboardEvent) => {
+    //   pressedKey = event.code;
+    //   character.direction = getDirectionByKey(event.code);
+    // });
+    //
+    // window.addEventListener('keyup', (event: KeyboardEvent) => {
+    //   if (pressedKey === event.code) {
+    //     pressedKey = undefined;
+    //     character.direction = null;
+    //   }
+    // });
 
     const debounceChangeCameraDistance = debounce(async (event: WheelEvent) => {
       event.preventDefault();
       event.stopPropagation();
       gameState.cameraDistance += gameState.cameraDistanceStep * Math.sign(event.deltaY);
-      character.path = [];
-      character.target = null;
+      movementSystem.setTargetCell(playerCharacter, null);
     }, 10);
     window.addEventListener('wheel', debounceChangeCameraDistance);
 

@@ -14,10 +14,7 @@ import { getPerlinNoise } from './get-perlin-noise';
 import { getPixelCoordsByCellNumber } from './get-pixel-coords-by-cell-number';
 import { getStateStringByEnum } from './get-state-string-by-enum';
 import { getVisibleTrees } from './get-visible-trees';
-import { moveCharacter } from './move-character';
 import { setCanvasSizeToFullScreen } from './set-canvas-size-to-full-screen';
-import { setCharacterVisionRadius } from './set-character-vision-radius';
-import { setCharacterVisionRadiusPx } from './set-character-vision-radius-px';
 import { updateCharacterVision } from './update-character-vision';
 
 export {
@@ -37,9 +34,6 @@ export {
   getPixelCoordsByCellNumber,
   getStateStringByEnum,
   getVisibleTrees,
-  moveCharacter,
   setCanvasSizeToFullScreen,
-  setCharacterVisionRadius,
-  setCharacterVisionRadiusPx,
   updateCharacterVision,
 }

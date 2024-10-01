@@ -1,6 +1,6 @@
 import { clamp, getBlockedCells, setCanvasSizeToFullScreen } from './utils';
 import { CELL_STATE } from './enums/cell-state.enum';
-import { Character } from './types/character';
+import { PositionComponent } from './ecs/component';
 
 class GameState {
   debugGrid: boolean = false;
@@ -82,11 +82,11 @@ class GameState {
   setBlockedCells(blockedCells: number[]) {
     this.cells = getBlockedCells(gameState.cells, blockedCells)
   }
-  setCtxScale(character: Character) {
+  setCtxScale(playerCharacterPosition: PositionComponent) {
     this.ctx.save();
     const scale: number = 1 / this.cameraDistance; // Calculate scaling factor based on zoom level
     // Get character's position in pixel coordinates
-    const [characterX, characterY]: [number, number] = character.positionPx;
+    const [characterX, characterY]: [number, number] = playerCharacterPosition.coordsPx;
     // Calculate the maximum and minimum allowable translations
     const maxTranslateX: number = 0;
     const maxTranslateY: number = 0;
