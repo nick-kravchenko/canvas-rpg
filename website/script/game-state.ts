@@ -6,6 +6,22 @@ class GameState {
   debugGrid: boolean = false;
   debugData: boolean = false;
   ignoreVision: boolean = false;
+  private _debug: {
+    [key: string]: string|number|boolean;
+  } = {};
+  set debug(newDebug: {
+    [key: string]: any;
+  }) {
+    this._debug = {
+      ...this._debug,
+      ...newDebug,
+    }
+  }
+  get debug(): {
+    [key: string]: any;
+  } {
+    return this._debug;
+  }
 
   canvasElement: HTMLCanvasElement | null = null;
   ctx: CanvasRenderingContext2D | null = null;

@@ -1,36 +1,11 @@
-import { CharacterEntity } from './ecs/entity';
-import { MovementComponent, NpcAnchorComponent, PositionComponent, VisionComponent } from './ecs/component';
-import { getNeighbors, getPath } from './utils';
 import { gameState } from './game-state';
-import { CELL_STATE } from './enums/cell-state.enum';
 import { movementSystem, visionSystem } from './ecs/system';
 import { playerCharacter } from './data/player';
 import { enemies } from './data/enemies';
 import { treesNew } from './data';
-
-const treeCells: number[] = treesNew;
-
-/**
- * Forces npc to chase player.
- */
-function chasePlayer(npc: CharacterEntity, targetPosition: PositionComponent) {
-  const npcPosition: PositionComponent = npc.getComponent<PositionComponent>('position');
-
-  const playerNeighbors: number[] = getNeighbors(targetPosition.cellNumber)
-    .filter((cellNumber: number) => gameState.cells[cellNumber] !== CELL_STATE.BLOCKED);
-
-  const closestNeighborPath: number[] = playerNeighbors.reduce((prevPath: number[]|null, cur: number) => {
-    const newPath: number[] = getPath(npcPosition.cellNumber, cur);
-    return !prevPath || (newPath.length < prevPath.length) ?  newPath : prevPath;
-  }, null);
-
-  if (closestNeighborPath && typeof closestNeighborPath[0] === 'number' && closestNeighborPath.length) {
-    movementSystem.setTargetCell(npc, closestNeighborPath[closestNeighborPath.length  - 1]);
-  }
-}
+import { aiSystem } from './ecs/system/ai-system';
 
 export function gameTimerLoop() {
-  const playerCharacterPosition: PositionComponent = playerCharacter.getComponent<PositionComponent>('position');
   /**
    * Update game time
    */
@@ -49,26 +24,15 @@ export function gameTimerLoop() {
   }
 
   /**
-   * Enemies movement/vision/chase behavior
+   * Enemies behavior and movement
    */
-  for (let enemy of enemies) {
-    const enemyVision: VisionComponent = enemy.getComponent<VisionComponent>('vision');
-    const enemyMovement: MovementComponent = enemy.getComponent<MovementComponent>('movement');
-    const enemyNpcAnchor: NpcAnchorComponent = enemy.getComponent<NpcAnchorComponent>('npcAnchor')
-    const enemyPosition: PositionComponent = enemy.getComponent<PositionComponent>('position');
+  aiSystem.update(enemies, playerCharacter);
 
-    if (enemyVision.visibleCells.includes(playerCharacterPosition.cellNumber)) chasePlayer(enemy, playerCharacterPosition);
-    if (
-      !enemyMovement.path.length
-      && !enemyVision.visibleCells.includes(playerCharacterPosition.cellNumber)
-      && enemyNpcAnchor.cellNumber !== enemyPosition.cellNumber
-    ) {
-      movementSystem.setTargetCell(enemy, enemyNpcAnchor.cellNumber);
-    }
-  }
-
+  /**
+   * Update movement and vision systems
+   */
   movementSystem.update([playerCharacter, ...enemies]);
-  visionSystem.update([playerCharacter, ...enemies], treeCells);
+  visionSystem.update([playerCharacter, ...enemies], treesNew);
 
   /**
    * Call gameLoop recursively in gameTickRate ms

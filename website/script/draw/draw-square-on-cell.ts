@@ -1,6 +1,12 @@
 import { getPixelCoordsByCellNumber } from '../utils';
+import { gameState } from '../game-state';
 
-export function drawSquareOnCell(ctx: CanvasRenderingContext2D, cellNumber: number, cellsX: number, cellSize: number, color: string) {
+export function drawSquareOnCell(cellNumber: number, color: string) {
+  const {
+    ctx,
+    cellSize,
+  } = gameState;
+
   ctx.save();
   ctx.fillStyle = color;
   const [x, y] = getPixelCoordsByCellNumber(cellNumber);

@@ -3,7 +3,10 @@ import { playerCharacter } from './data/player';
 import { gameState } from './game-state';
 import { PlayerControlsComponent } from './ecs/component/player-controls-component';
 import {
-  drawBackground, drawClock, drawDebugData, drawDebugGrid,
+  drawBackground,
+  drawClock,
+  drawDebugData,
+  drawDebugGrid,
   drawEntityCharacter,
   drawEntityEnemy,
   drawEntityVision,
@@ -54,7 +57,7 @@ function draw(tick: number) {
 
   for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {
     if (isWithinScreenBounds(cellNumber)) {
-      const cellState: number = gameState.cells[cellNumber];
+      const cellState: CELL_STATE = gameState.cells[cellNumber];
       if (gameState.ignoreVision || playerCharacterVision.exploredCells.includes(cellNumber)) {
         if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
       }
@@ -87,9 +90,7 @@ function draw(tick: number) {
 
   drawClock();
   drawMinimap(gameState.cameraDistance, playerCharacter);
-  drawDebugData({
-    FPS: Math.round(tick / ((performance.now() - start) / 1000)),
-  });
+  drawDebugData();
 }
 
 export function gameRenderLoop(tick: number) {

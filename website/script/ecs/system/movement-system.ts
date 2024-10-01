@@ -53,8 +53,10 @@ class MovementSystem {
     const deltaY: number = Math.abs(position.coordsPx[1] - newCharacterPositionPx[1]);
 
     if (deltaX > 1 || deltaY > 1) {
-      position.coordsPx[0] += (newCharacterPositionPx[0] > position.coordsPx[0] ? movement.speed : newCharacterPositionPx[0] < position.coordsPx[0] ? -movement.speed : 0);
-      position.coordsPx[1] += (newCharacterPositionPx[1] > position.coordsPx[1] ? movement.speed : newCharacterPositionPx[1] < position.coordsPx[1] ? -movement.speed : 0);
+      position.coordsPx = [
+        Math.round(position.coordsPx[0] + (newCharacterPositionPx[0] > position.coordsPx[0] ? movement.speed : newCharacterPositionPx[0] < position.coordsPx[0] ? -movement.speed : 0)),
+        Math.round(position.coordsPx[1] + (newCharacterPositionPx[1] > position.coordsPx[1] ? movement.speed : newCharacterPositionPx[1] < position.coordsPx[1] ? -movement.speed : 0)),
+      ];
     }
 
     if (deltaX < cellSize * .75 && deltaY < cellSize * .75) {

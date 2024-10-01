@@ -1,6 +1,3 @@
-/**
- * Event listeners for 'click', 'mousemove', 'wheel', 'keydown', 'keyup' and 'change' for checkboxes
- */
 import { gameState } from './game-state';
 import { debounce, getCellNumberByPixelCoords } from './utils';
 import { movementSystem } from './ecs/system';
