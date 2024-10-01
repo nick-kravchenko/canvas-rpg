@@ -1,18 +1,22 @@
 import { Character } from '../types/character';
 import { CELL_STATE } from '../enums/cell-state.enum';
+import { gameState } from '../game-state';
 
 export function drawMinimap(
-  ctx: CanvasRenderingContext2D,
-  w: number,
-  h: number,
-  cells: Int8Array,
-  cellsX: number,
-  cellsY: number,
   cameraDistance: number,
-  translateX: number,
-  translateY: number,
   character: Character,
 ) {
+  const {
+    ctx,
+    cells,
+    cellsX,
+    cellsY,
+    w,
+    h,
+    translateX,
+    translateY,
+  } = gameState;
+
   const scale = .1;
   const x: number = (w - w * scale) - 4;
   const y: number = (0) + 4;

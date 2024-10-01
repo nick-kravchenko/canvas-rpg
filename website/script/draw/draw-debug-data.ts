@@ -1,4 +1,14 @@
-export function drawDebugData(ctx: CanvasRenderingContext2D, cellSize: number, w: number, data: { [key: string]: number|string }) {
+import { gameState } from '../game-state';
+
+export function drawDebugData(data: { [key: string]: number|string|boolean }) {
+  if (!gameState.debugData) return;
+
+  const {
+    ctx,
+    cellSize,
+    w,
+  } = gameState;
+
   const scale = .5;
   let strings: string[] = [];
   Object.entries(data).forEach(([key, value]) => {

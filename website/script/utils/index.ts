@@ -1,6 +1,7 @@
+import { clamp } from './clamp';
 import { debounce } from './debounce';
-import { getCanvasCoordsByCellNumber } from './get-canvas-coords-by-cell-number';
-import { getCellByCanvasCoords } from './get-cell-by-canvas-coords';
+import { getPixelCoordsByCellNumber } from './get-pixel-coords-by-cell-number';
+import { getCellNumberByPixelCoords } from './get-cell-number-by-pixel-coords';
 import { getCellCoordsByCellNumber } from './get-cell-coords-by-cell-number';
 import { getDistanceInCells } from './get-distance-in-cells';
 import { getBlockedCells } from './get-blocked-cells';
@@ -14,18 +15,16 @@ import { getPath } from './get-path';
 import { getPerlinNoise } from './get-perlin-noise';
 import { getStateStringByEnum } from './get-state-string-by-enum';
 import { getVisibleTrees } from './get-visible-trees';
-import { imagesCharacter } from './images-character';
-import { imagesTrees } from './images-trees';
 import { setCanvasSizeToFullScreen } from './set-canvas-size-to-full-screen';
-import { setCellVisited } from './set-cell-visited';
 import { setCharacterVisionRadius } from './set-character-vision-radius';
 import { setCharacterVisionRadiusPx } from './set-character-vision-radius-px';
 import { updateCharacterVision } from './update-character-vision';
 
 export {
+  clamp,
   debounce,
-  getCanvasCoordsByCellNumber,
-  getCellByCanvasCoords,
+  getPixelCoordsByCellNumber,
+  getCellNumberByPixelCoords,
   getCellCoordsByCellNumber,
   getDistanceInCells,
   getBlockedCells,
@@ -38,11 +37,8 @@ export {
   getPerlinNoise,
   getStateStringByEnum,
   getVisibleTrees,
-  imagesCharacter,
-  imagesTrees,
   moveCharacter,
   setCanvasSizeToFullScreen,
-  setCellVisited,
   setCharacterVisionRadius,
   setCharacterVisionRadiusPx,
   updateCharacterVision,

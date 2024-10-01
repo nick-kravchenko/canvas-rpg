@@ -1,8 +1,17 @@
-import { getCanvasCoordsByCellNumber } from '../utils';
+import { getPixelCoordsByCellNumber } from '../utils';
+import { gameState } from '../game-state';
 
-export function drawDebugGrid(ctx: CanvasRenderingContext2D,cells: Int8Array, cellsX: number, cellSize: number) {
+export function drawDebugGrid() {
+  if (!gameState.debugGrid) return;
+
+  const {
+    ctx,
+    cells,
+    cellSize,
+  } = gameState;
+
   cells.forEach((_: number, cellNumber: number) => {
-    const [x, y]: [number, number] = getCanvasCoordsByCellNumber(cellNumber, cellsX, cellSize);
+    const [x, y]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
     ctx.save();
     ctx.strokeStyle = '#fff';
     let path2D: Path2D = new Path2D();

@@ -1,8 +1,14 @@
-import { getCanvasCoordsByCellNumber } from '../utils';
+import { getPixelCoordsByCellNumber } from '../utils';
+import { gameState } from '../game-state';
 
-export function drawPointer(ctx: CanvasRenderingContext2D, cellNumber: number, cellsX: number, cellSize: number, tick: number) {
+export function drawPointer(cellNumber: number, tick: number) {
+  const {
+    ctx,
+    cellsX,
+    cellSize,
+  } = gameState;
   if (typeof cellNumber === 'number') {
-    const [x, y]: [number, number] = getCanvasCoordsByCellNumber(cellNumber, cellsX, cellSize);
+    const [x, y]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
     ctx.save();
     ctx.beginPath();
     // TOP LEFT

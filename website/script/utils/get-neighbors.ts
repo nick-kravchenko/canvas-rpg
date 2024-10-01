@@ -1,4 +1,11 @@
-export function getNeighbors(cells: Int8Array, cellsX: number, cellsY: number, cellNumber: number, diagonal: boolean = false): number[] {
+import { gameState } from '../game-state';
+
+export function getNeighbors(cellNumber: number, diagonal: boolean = false): number[] {
+  const {
+    cellsX,
+    cellsY,
+  } = gameState;
+
   const neighbors: number[] = [];
   // top cell
   if (cellNumber >= cellsX) neighbors.push(cellNumber - cellsX);
@@ -19,10 +26,15 @@ export function getNeighbors(cells: Int8Array, cellsX: number, cellsY: number, c
     // bottom-right
     if ((cellNumber < ((cellsX * cellsY) - cellsY)) && (cellNumber + 1) % cellsX) neighbors.push(cellNumber + cellsX + 1);
   }
-  return neighbors.filter(cell => cell >= 0 && typeof cells[cell] !== 'undefined');
+  return neighbors;
 }
 
-export function getNeighborsAsObject(cells: Int8Array, cellsX: number, cellsY: number, cellNumber: number, diagonal: boolean = false): { [key: string]: number } {
+export function getNeighborsAsObject(cellNumber: number, diagonal: boolean = false): { [key: string]: number } {
+  const {
+    cellsX,
+    cellsY,
+  } = gameState;
+
   const neighbors: { [key: string]: number } = {};
   // top cell
   if (cellNumber >= cellsX) neighbors['top'] = (cellNumber - cellsX);

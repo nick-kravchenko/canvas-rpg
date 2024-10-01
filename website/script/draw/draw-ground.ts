@@ -1,15 +1,22 @@
 // @ts-ignore
 import groundImagePng from '../../images/ground2.png';
-import { getCanvasCoordsByCellNumber } from '../utils';
+import { getPixelCoordsByCellNumber } from '../utils';
 import { CELL_STATE } from '../enums/cell-state.enum';
 import { getNeighborsAsObject } from '../utils/get-neighbors';
+import { gameState } from '../game-state';
 
 const groundImage = new Image();
 groundImage.src = groundImagePng;
 
-export function drawGround(ctx: CanvasRenderingContext2D, cells: Int8Array, cellsX: number, cellsY: number, cellSize: number, cellNumber: number) {
-  const [dx, dy]: [number, number] = getCanvasCoordsByCellNumber(cellNumber, cellsX, cellSize);
-  const neighbors: { [key: string]: number } = getNeighborsAsObject(cells, cellsX, cellsY, cellNumber, true);
+export function drawGround(cellNumber: number) {
+  const {
+    ctx,
+    cells,
+    cellSize,
+  } = gameState;
+
+  const [dx, dy]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
+  const neighbors: { [key: string]: number } = getNeighborsAsObject(cellNumber, true);
   function isBlocked(cellNumber: number): boolean {
     return cells[cellNumber] === CELL_STATE.BLOCKED;
   }

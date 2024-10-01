@@ -1,24 +1,29 @@
 import { CELL_STATE } from '../enums/cell-state.enum';
 import { DIRECTION } from '../enums/direction.enum';
+import { gameState } from '../game-state';
+import { Character } from '../types/character';
 
-export function getNextCharacterPositionByCellNumber(
-  cells: Int8Array,
-  cellsX: number,
-  cellsY: number,
-  path: number[],
-  pressedKey: string,
-  characterPosition: number,
-  direction: DIRECTION
-): number {
+export function getNextCharacterPositionByCellNumber(character: Character, pressedKey: string): number {
+  const {
+    cells,
+    cellsX,
+    cellsY,
+  } = gameState;
+  const {
+    path,
+    position,
+    direction,
+  } = character;
+
   if (path.length ) {
     return path[0];
   }
   if (pressedKey) {
     let neighbors: { [key: string]: number } = {};
-    if (characterPosition >= cellsX) neighbors['top'] = (characterPosition - cellsX);
-    if ((characterPosition + 1) % cellsX) neighbors['right'] = (characterPosition + 1);
-    if (characterPosition % cellsX) neighbors['left'] = (characterPosition - 1);
-    if (characterPosition < ((cellsX * cellsY) - cellsY)) neighbors['bottom'] = (characterPosition + cellsX);
+    if (position >= cellsX) neighbors['top'] = (position - cellsX);
+    if ((position + 1) % cellsX) neighbors['right'] = (position + 1);
+    if (position % cellsX) neighbors['left'] = (position - 1);
+    if (position < ((cellsX * cellsY) - cellsY)) neighbors['bottom'] = (position + cellsX);
 
     if (cells[neighbors.top] === CELL_STATE.BLOCKED) delete neighbors['top'];
     if (cells[neighbors.left] === CELL_STATE.BLOCKED) delete neighbors['left'];
@@ -40,5 +45,5 @@ export function getNextCharacterPositionByCellNumber(
         break;
     }
   }
-  return characterPosition;
+  return position;
 }

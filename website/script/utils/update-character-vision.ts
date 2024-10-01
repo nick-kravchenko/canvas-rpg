@@ -1,11 +1,12 @@
 import { Character } from '../types/character';
 import { getDistanceInCells } from './get-distance-in-cells';
 import { getVisibleTrees, VisibleTrees } from './get-visible-trees';
-import { getCanvasCoordsByCellNumber } from './get-canvas-coords-by-cell-number';
+import { getPixelCoordsByCellNumber } from './get-pixel-coords-by-cell-number';
 import { getLinesIntersection } from './get-lines-intersection';
+import { gameState } from '../game-state';
 
-function isOnLineOfSight(cellsX: number, cellSize: number, visibleTrees: VisibleTrees, centerX: number, centerY: number, cellNumber: number) {
-  let [targetX, targetY]: [number, number] = getCanvasCoordsByCellNumber(cellNumber, cellsX, cellSize);
+function isOnLineOfSight(cellSize: number, visibleTrees: VisibleTrees, centerX: number, centerY: number, cellNumber: number) {
+  let [targetX, targetY]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
 
   const targetIntersections: [number, number][] = [
     getLinesIntersection(centerX, centerY, targetX + cellSize * .5, targetY + cellSize * .5, targetX, targetY, targetX + cellSize, targetY),  // Top
@@ -26,7 +27,7 @@ function isOnLineOfSight(cellsX: number, cellSize: number, visibleTrees: Visible
     return false;
   }
 
-  for (const [treeX, treeY] of Object.values(visibleTrees).flat().map((treePosition: number) => getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize))) {
+  for (const [treeX, treeY] of Object.values(visibleTrees).flat().map((treePosition: number) => getPixelCoordsByCellNumber(treePosition))) {
     const intersections: ([number, number] | null)[] = [
       getLinesIntersection(centerX, centerY, targetX + cellSize * .5, targetY + cellSize * .5, treeX, treeY, treeX + cellSize, treeY),  // Top
       getLinesIntersection(centerX, centerY, targetX + cellSize * .5, targetY + cellSize * .5, treeX, treeY + cellSize, treeX + cellSize, treeY + cellSize),  // Bottom
@@ -36,8 +37,8 @@ function isOnLineOfSight(cellsX: number, cellSize: number, visibleTrees: Visible
 
     if (intersections.some((intersection: [number, number] | null) => {
       if (!intersection) return false;
-      const treeDist = Math.hypot(intersection[0] - centerX, intersection[1] - centerY);
-      const targetDist = Math.hypot(closestIntersectionWithTarget[0] - centerX, closestIntersectionWithTarget[1] - centerY);
+      const treeDist: number = Math.hypot(intersection[0] - centerX, intersection[1] - centerY);
+      const targetDist: number = Math.hypot(closestIntersectionWithTarget[0] - centerX, closestIntersectionWithTarget[1] - centerY);
       return treeDist < targetDist;
     })) {
       return false;  // The view is blocked by a tree
@@ -47,22 +48,28 @@ function isOnLineOfSight(cellsX: number, cellSize: number, visibleTrees: Visible
   return true;  // No trees are blocking the line of sight
 }
 
-export function updateCharacterVision(cells: Int8Array, blockedCells: number[], cellsX: number, cellSize: number, character: Character) {
+export function updateCharacterVision(character: Character, blockedCells: number[]) {
+  const {
+    cells,
+    cellsX,
+    cellSize,
+  } = gameState;
+
   character.visible = [];
   let [x, y]: [number, number] = character.positionPx;
   let centerX: number = x + (cellSize / 2);
   let centerY: number = y + (cellSize / 2);
   let visibleTrees: VisibleTrees = getVisibleTrees(blockedCells, cellsX, cellSize, character.position, x, y, centerX, centerY, character.visionRadiusPx);
   for (let i: number = 0; i < cells.length; i++) {
-    const distance = getDistanceInCells(cellsX, character.position, i);
+    const distance = getDistanceInCells(character.position, i);
 
     // Check if within vision radius
     if (distance < character.visionRadius) {
       // If not yet explored, mark as explored
-      if (!character.explored.includes(i) && isOnLineOfSight(cellsX, cellSize, visibleTrees, centerX, centerY, i)) character.explored.push(i);
+      if (!character.explored.includes(i) && isOnLineOfSight(cellSize, visibleTrees, centerX, centerY, i)) character.explored.push(i);
 
       // Check if it's within line of sight
-      if (isOnLineOfSight(cellsX, cellSize, visibleTrees, centerX, centerY, i)) {
+      if (isOnLineOfSight(cellSize, visibleTrees, centerX, centerY, i)) {
         character.visible.push(i); // Add to visible cells if it's on the line of sight
       }
     }

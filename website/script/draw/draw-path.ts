@@ -1,6 +1,13 @@
-import { getCanvasCoordsByCellNumber } from '../utils';
+import { getPixelCoordsByCellNumber } from '../utils';
+import { gameState } from '../game-state';
 
-export function drawPath(ctx: CanvasRenderingContext2D, path: number[], cellsX: number, cellSize: number) {
+export function drawPath(path: number[]) {
+  const {
+    ctx,
+    cellsX,
+    cellSize,
+  } = gameState;
+
   if (path.length > 0) {
     ctx.save();
     ctx.beginPath();
@@ -8,7 +15,7 @@ export function drawPath(ctx: CanvasRenderingContext2D, path: number[], cellsX: 
     ctx.strokeStyle = 'rgba(255, 255, 255, .7)';
     ctx.lineWidth = cellSize / 8;
     path.forEach((cellNumber: number, index: number) => {
-      let [x, y]: [number, number] = getCanvasCoordsByCellNumber(cellNumber, cellsX, cellSize);
+      let [x, y]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
       x += cellSize / 2;
       y += cellSize / 2;
       const scale = path.length - 1 === index ? .25 : .125;

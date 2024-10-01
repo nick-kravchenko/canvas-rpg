@@ -66,7 +66,7 @@ export function getPerlinNoise(x: number, y: number) {
 // const noiseRandomVariety = .017;
 // // @ts-ignore
 // const noise: number[] = Array.from(cells).map((cellState: CELL_STATE, index: number) => {
-//   const [x, y]: [number, number] = getCellCoordsByCellNumber(cellsX, index + 1);
+//   const [x, y]: [number, number] = getCellCoordsByCellNumber(cellsX);
 //   // Adjust scaling factor and apply Perlin noise
 //   return getPerlinNoise(x * noiseScale, y * noiseScale);  // Increased scaling factor
 // })

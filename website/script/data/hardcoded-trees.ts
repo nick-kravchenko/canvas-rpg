@@ -1,4 +1,4 @@
-export const trees = ([
+export const treesOld = ([
   5, 36, 68, 100, 132, 164, 196,
   // 228,
   260, 292, 324, 356, 389, 422, 455,
@@ -45,3 +45,16 @@ export const trees = ([
   // 252,
   220, 188, 156, 124, 92, 60,
 ]);
+
+export const treesNew: number[] = [
+  176, 80, 16, /* top */
+  210, 117, 24, /* top-right */
+  275, 278, 281, /* right */
+  338, 437, 503, /* bottom-right */
+  368, 464, /* bottom */
+  334, 427, 489, /* bottom-left */
+  269, 266, 263, /* left */
+  206, 107, 8, /* top-left */
+
+  220, 68, // trees to test enemies vision blocking
+];

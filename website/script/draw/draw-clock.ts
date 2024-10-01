@@ -1,11 +1,20 @@
 // @ts-ignore
 import characterFrontPng from '../../images/clock.png';
+import { gameState } from '../game-state';
 
 const clockImage = new Image();
 clockImage.src = characterFrontPng;
 
+export function drawClock() {
+  const {
+    ctx,
+    cellSize,
+    w,
+    h,
+    dayNightCycle,
+    time,
+  } = gameState;
 
-export function drawClock(ctx: CanvasRenderingContext2D, w: number, h: number, cellSize: number, dayNightCycle: number, time: number) {
   const radius = cellSize / 2;
   const halfCycle = dayNightCycle / 2;
   const timePassedSinceMidSmth = time % halfCycle;

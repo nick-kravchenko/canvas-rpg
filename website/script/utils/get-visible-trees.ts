@@ -1,4 +1,4 @@
-import { getCanvasCoordsByCellNumber } from './get-canvas-coords-by-cell-number';
+import { getPixelCoordsByCellNumber } from './get-pixel-coords-by-cell-number';
 
 export interface VisibleTrees {
   topLeft: number[];
@@ -33,7 +33,7 @@ export function getVisibleTrees(
   };
   for (let i: number = 0; i < blockedCells.length; i++) {
     let treePosition: number = blockedCells[i];
-    let [treeX, treeY]: [number, number] = getCanvasCoordsByCellNumber(treePosition, cellsX, cellSize);
+    let [treeX, treeY]: [number, number] = getPixelCoordsByCellNumber(treePosition);
     let isLeft: boolean = (treePosition % cellsX) < (cellNumber % cellsX);
     let isRight: boolean = (treePosition % cellsX) > (cellNumber % cellsX);
     let isTop: boolean = (treePosition < cellNumber) && (Math.floor(cellNumber / cellsX) > Math.floor(treePosition / cellsX));

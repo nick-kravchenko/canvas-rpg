@@ -2,15 +2,18 @@ import { DIRECTION } from '../enums/direction.enum';
 import { getCharacterImageByDirection } from '../utils';
 import { Npc } from '../types/npc';
 import { Character } from '../types/character';
+import { gameState } from '../game-state';
 
 export function drawEnemy(
-  ctx: CanvasRenderingContext2D,
-  cellsX: number,
-  cellSize: number,
-  tick: number,
   enemy: Npc,
   player: Character,
+  tick: number,
 ) {
+  const {
+    ctx,
+    cellsX,
+    cellSize,
+  } = gameState;
   if (enemy.path.length) {
     if (enemy.path[0] + 1 === enemy.position) {
       enemy.direction = DIRECTION.LEFT;

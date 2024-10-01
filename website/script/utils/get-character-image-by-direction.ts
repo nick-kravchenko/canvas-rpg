@@ -1,5 +1,5 @@
 import { DIRECTION } from '../enums/direction.enum';
-import { imagesCharacter } from './images-character';
+import { imagesCharacter } from '../data';
 
 export function getCharacterImageByDirection(direction: DIRECTION): HTMLImageElement {
   switch (direction) {

@@ -1,5 +1,6 @@
 import { getNeighbors } from './get-neighbors';
 import { CELL_STATE } from '../enums/cell-state.enum';
+import { gameState } from '../game-state';
 
 function reconstructPath(startParents: Map<number, number>, endParents: Map<number, number>, meetingPoint: number) {
   const path: number[] = [];
@@ -16,7 +17,11 @@ function reconstructPath(startParents: Map<number, number>, endParents: Map<numb
   return path;
 }
 
-export function getPath(cells: Int8Array, cellsX: number, cellsY: number, start: number, end: number): any {
+export function getPath(start: number, end: number): any {
+  const {
+    cells,
+  } = gameState;
+
   const startQueue: number[] = [start];
   const startParents: Map<number, number> = new Map();
   startParents.set(start, -1);
@@ -27,7 +32,7 @@ export function getPath(cells: Int8Array, cellsX: number, cellsY: number, start:
 
   while (startQueue.length > 0 && endQueue.length > 0) {
     const currentStartCell: number = startQueue.shift();
-    const startNeighbors: number[] = getNeighbors(cells, cellsX, cellsY, currentStartCell);
+    const startNeighbors: number[] = getNeighbors(currentStartCell);
     for (let neighbor of startNeighbors) {
       if (!startParents.has(neighbor) && cells[neighbor] !== CELL_STATE.BLOCKED) {
         startQueue.push(neighbor);
@@ -40,7 +45,7 @@ export function getPath(cells: Int8Array, cellsX: number, cellsY: number, start:
     }
 
     const currentEndCell: number = endQueue.shift();
-    const endNeighbors: number[] = getNeighbors(cells, cellsX, cellsY, currentEndCell);
+    const endNeighbors: number[] = getNeighbors(currentEndCell);
     for (let neighbor of endNeighbors) {
       if (!endParents.has(neighbor) && cells[neighbor] !== CELL_STATE.BLOCKED) {
         endQueue.push(neighbor);

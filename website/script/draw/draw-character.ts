@@ -1,14 +1,18 @@
 import { DIRECTION } from '../enums/direction.enum';
-import { getCanvasCoordsByCellNumber, getCharacterImageByDirection } from '../utils';
+import { getPixelCoordsByCellNumber, getCharacterImageByDirection } from '../utils';
 import { Character } from '../types/character';
+import { gameState } from '../game-state';
 
 export function drawCharacter(
-  ctx: CanvasRenderingContext2D,
-  cellsX: number,
-  cellSize: number,
-  tick: number,
   character: Character,
+  tick: number,
 ) {
+  const {
+    ctx,
+    cellsX,
+    cellSize,
+  } = gameState;
+
   if (character.path.length) {
     if (character.path[0] + 1 === character.position) {
       character.direction = DIRECTION.LEFT;
@@ -31,13 +35,13 @@ export function drawCharacter(
 
   // ctx.save();
   // character.explored.forEach((cellNumber: number) => {
-  //   const [x, y]: [number, number] = getCanvasCoordsByCellNumber(cellNumber, cellsX, cellSize);
+  //   const [x, y]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
   //   ctx.lineWidth = cellSize * .05125;
   //   ctx.strokeStyle = '#f0f';
   //   ctx.strokeRect(x, y, cellSize, cellSize);
   // });
   // character.visible.forEach((cellNumber: number) => {
-  //   const [x, y]: [number, number] = getCanvasCoordsByCellNumber(cellNumber, cellsX, cellSize);
+  //   const [x, y]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
   //   ctx.lineWidth = cellSize * .125;
   //   ctx.strokeStyle = '#0af';
   //   ctx.strokeRect(x, y, cellSize, cellSize);
