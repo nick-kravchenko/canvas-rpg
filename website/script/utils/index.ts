@@ -15,7 +15,6 @@ import { getPixelCoordsByCellNumber } from './get-pixel-coords-by-cell-number';
 import { getStateStringByEnum } from './get-state-string-by-enum';
 import { getVisibleTrees } from './get-visible-trees';
 import { setCanvasSizeToFullScreen } from './set-canvas-size-to-full-screen';
-import { updateCharacterVision } from './update-character-vision';
 
 export {
   clamp,
@@ -35,5 +34,4 @@ export {
   getStateStringByEnum,
   getVisibleTrees,
   setCanvasSizeToFullScreen,
-  updateCharacterVision,
 }

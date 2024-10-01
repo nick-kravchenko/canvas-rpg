@@ -1,9 +1,8 @@
 import { gameState } from './game-state';
-import { movementSystem, visionSystem } from './ecs/system';
-import { playerCharacter } from './data/player';
-import { enemies } from './data/enemies';
+import { aiSystem, movementSystem, visionSystem } from './ecs/system';
+import { playerStorage } from './data/player-storage';
+import { enemiesStorage } from './data/enemies-storage';
 import { treesNew } from './data';
-import { aiSystem } from './ecs/system/ai-system';
 
 export function gameTimerLoop() {
   /**
@@ -19,20 +18,20 @@ export function gameTimerLoop() {
     gameState.setIsNight(newIsNight);
     const newCellsVisionRadius: number = newIsNight ? gameState.nightTimeVisionRadius : gameState.dayTimeVisionRadius;
     const newPxVisionRadius: number = newCellsVisionRadius * gameState.cellSize;
-    visionSystem.setCharacterVisionRadius(playerCharacter, newCellsVisionRadius);
-    visionSystem.setCharacterVisionRadiusPx(playerCharacter, newPxVisionRadius);
+    visionSystem.setCharacterVisionRadius(playerStorage.playerCharacter, newCellsVisionRadius);
+    visionSystem.setCharacterVisionRadiusPx(playerStorage.playerCharacter, newPxVisionRadius);
   }
 
   /**
    * Enemies behavior and movement
    */
-  aiSystem.update(enemies, playerCharacter);
+  aiSystem.update(enemiesStorage.enemies, playerStorage.playerCharacter);
 
   /**
    * Update movement and vision systems
    */
-  movementSystem.update([playerCharacter, ...enemies]);
-  visionSystem.update([playerCharacter, ...enemies], treesNew);
+  movementSystem.update([playerStorage.playerCharacter, ...enemiesStorage.enemies]);
+  visionSystem.update([playerStorage.playerCharacter, ...enemiesStorage.enemies], treesNew);
 
   /**
    * Call gameLoop recursively in gameTickRate ms

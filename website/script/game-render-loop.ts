@@ -1,5 +1,5 @@
 import { MovementComponent, PlayerControlsComponent, PositionComponent, VisionComponent } from './ecs/component';
-import { playerCharacter } from './data/player';
+import { playerStorage } from './data/player-storage';
 import { gameState } from './game-state';
 import {
   drawBackground,
@@ -14,7 +14,7 @@ import {
   drawTree
 } from './draw';
 import { CELL_STATE } from './enums/cell-state.enum';
-import { enemies } from './data/enemies';
+import { enemiesStorage } from './data/enemies-storage';
 import { CharacterEntity } from './ecs/entity';
 import { imagesTrees, treesNew } from './data';
 import { ComponentKey } from './enums/component-key.enum';
@@ -28,7 +28,7 @@ const treeImages: { [key: number]: HTMLImageElement } = treeCells.reduce((acc, c
  * Check if cell is in screen bounds
  */
 const isWithinScreenBounds = (cellNumber: number) => {
-  const playerCharacterPosition: PositionComponent = playerCharacter.getComponent(ComponentKey.POSITION);
+  const playerCharacterPosition: PositionComponent = playerStorage.playerCharacter.getComponent(ComponentKey.POSITION);
   const visionRangeX: number = Math.round(gameState.cellsX * gameState.cameraDistance);
   const visionRangeY: number = Math.round(gameState.cellsY * gameState.cameraDistance);
   const inVisionVertically: boolean = Math.abs(Math.floor(cellNumber / gameState.cellsX) - Math.floor(playerCharacterPosition.cellNumber / gameState.cellsX)) - visionRangeX / gameState.cameraDistance <= visionRangeY;
@@ -37,10 +37,10 @@ const isWithinScreenBounds = (cellNumber: number) => {
 };
 
 function draw(tick: number) {
-  const playerCharacterPosition: PositionComponent = playerCharacter.getComponent(ComponentKey.POSITION);
-  const playerCharacterMovement: MovementComponent = playerCharacter.getComponent(ComponentKey.MOVEMENT);
-  const playerCharacterVision: VisionComponent = playerCharacter.getComponent(ComponentKey.VISION);
-  const playerCharacterControls: PlayerControlsComponent = playerCharacter.getComponent(ComponentKey.PLAYER_CONTROLS);
+  const playerCharacterPosition: PositionComponent = playerStorage.playerCharacter.getComponent(ComponentKey.POSITION);
+  const playerCharacterMovement: MovementComponent = playerStorage.playerCharacter.getComponent(ComponentKey.MOVEMENT);
+  const playerCharacterVision: VisionComponent = playerStorage.playerCharacter.getComponent(ComponentKey.VISION);
+  const playerCharacterControls: PlayerControlsComponent = playerStorage.playerCharacter.getComponent(ComponentKey.PLAYER_CONTROLS);
 
   gameState.setCtxScale(playerCharacterPosition);
 
@@ -62,9 +62,9 @@ function draw(tick: number) {
         if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
       }
 
-      if (cellNumber === playerCharacterPosition.cellNumber) drawEntityCharacter(playerCharacter);
+      if (cellNumber === playerCharacterPosition.cellNumber) drawEntityCharacter(playerStorage.playerCharacter);
 
-      enemies.forEach((enemy: CharacterEntity) => {
+      enemiesStorage.enemies.forEach((enemy: CharacterEntity) => {
         const enemyPosition: PositionComponent = enemy.getComponent(ComponentKey.POSITION);
         if (
           cellNumber === enemyPosition.cellNumber
@@ -77,9 +77,9 @@ function draw(tick: number) {
   let maxVisionPx: number = gameState.dayTimeVisionRadius * gameState.cellSize;
   let visiblePercent: number = playerCharacterVision.visionRadiusPx / maxVisionPx;
   let alpha: number = .4 + (.2 / visiblePercent);
-  drawEntityVision(treeCells, playerCharacter, `rgba(0, 0, 0, ${alpha})`);
+  drawEntityVision(treeCells, playerStorage.playerCharacter, `rgba(0, 0, 0, ${alpha})`);
 
-  drawPointer(playerCharacterControls.mouseOver, tick);
+  drawPointer(playerStorage.playerCharacter, tick);
 
   drawDebugGrid();
 
@@ -89,7 +89,7 @@ function draw(tick: number) {
   gameState.restoreCtxScale();
 
   drawClock();
-  drawMinimap(gameState.cameraDistance, playerCharacter);
+  drawMinimap(gameState.cameraDistance, playerStorage.playerCharacter);
   drawDebugData();
 }
 

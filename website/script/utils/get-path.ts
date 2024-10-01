@@ -34,7 +34,11 @@ export function getPath(start: number, end: number): any {
     const currentStartCell: number = startQueue.shift();
     const startNeighbors: number[] = getNeighbors(currentStartCell);
     for (let neighbor of startNeighbors) {
-      if (!startParents.has(neighbor) && cells[neighbor] !== CELL_STATE.BLOCKED) {
+      if (
+        !startParents.has(neighbor)
+        && cells[neighbor] !== CELL_STATE.BLOCKED
+        // && !enemiesStorage?.enemies?.some((enemy) => enemy.getComponent(ComponentKey.POSITION)?.cellNumber === neighbor)
+      ) {
         startQueue.push(neighbor);
         startParents.set(neighbor, currentStartCell);
       }
@@ -47,7 +51,11 @@ export function getPath(start: number, end: number): any {
     const currentEndCell: number = endQueue.shift();
     const endNeighbors: number[] = getNeighbors(currentEndCell);
     for (let neighbor of endNeighbors) {
-      if (!endParents.has(neighbor) && cells[neighbor] !== CELL_STATE.BLOCKED) {
+      if (
+        !endParents.has(neighbor)
+        && cells[neighbor] !== CELL_STATE.BLOCKED
+        // && !enemiesStorage?.enemies?.some((enemy) => enemy.getComponent(ComponentKey.POSITION)?.cellNumber === neighbor)
+      ) {
         endQueue.push(neighbor);
         endParents.set(neighbor, currentEndCell);
       }

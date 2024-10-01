@@ -10,8 +10,8 @@ canvas {
   width: auto;
   height: auto;
   max-height: 100vh;
-  image-rendering: pixelated;
-  image-rendering: crisp-edges;
+  //image-rendering: pixelated;
+  cursor: none;
 }
 
 .controls {

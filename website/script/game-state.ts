@@ -2,26 +2,15 @@ import { clamp, getBlockedCells, setCanvasSizeToFullScreen } from './utils';
 import { CELL_STATE } from './enums/cell-state.enum';
 import { PositionComponent } from './ecs/component';
 
-class GameState {
+export class GameState {
+  private static instance: GameState;
+
   debugGrid: boolean = false;
   debugData: boolean = false;
   ignoreVision: boolean = false;
   private _debug: {
     [key: string]: string|number|boolean;
   } = {};
-  set debug(newDebug: {
-    [key: string]: any;
-  }) {
-    this._debug = {
-      ...this._debug,
-      ...newDebug,
-    }
-  }
-  get debug(): {
-    [key: string]: any;
-  } {
-    return this._debug;
-  }
 
   canvasElement: HTMLCanvasElement | null = null;
   ctx: CanvasRenderingContext2D | null = null;
@@ -54,16 +43,10 @@ class GameState {
   private minCameraDistance: number = .4;
   private maxCameraDistance: number = 1;
   private _cameraDistance: number = 1; // 1 = 100% = max distance
-  get cameraDistance() {
-    return this._cameraDistance;
-  }
-  set cameraDistance(distance: number) {
-    this._cameraDistance = clamp(distance, this.minCameraDistance, this.maxCameraDistance);
-  }
   translateX: number = 0;
   translateY: number = 0;
 
-  constructor() {
+  private constructor() {
     this.canvasElement = document.getElementById('main-canvas') as HTMLCanvasElement;
     if (!this.canvasElement) {
       throw new Error("Canvas element not found");
@@ -73,7 +56,35 @@ class GameState {
     if (!this.ctx) {
       throw new Error("Could not get canvas rendering context");
     }
+
     this.prefillDebugState();
+  }
+
+  // Singleton instance accessor
+  public static getInstance(): GameState {
+    if (!GameState.instance) {
+      GameState.instance = new GameState();
+    }
+    return GameState.instance;
+  }
+
+  set debug(newDebug: { [key: string]: any; }) {
+    this._debug = {
+      ...this._debug,
+      ...newDebug,
+    };
+  }
+
+  get debug(): { [key: string]: any; } {
+    return this._debug;
+  }
+
+  get cameraDistance() {
+    return this._cameraDistance;
+  }
+
+  set cameraDistance(distance: number) {
+    this._cameraDistance = clamp(distance, this.minCameraDistance, this.maxCameraDistance);
   }
 
   setCanvasSizes(): void {
@@ -91,34 +102,32 @@ class GameState {
   setIgnoreVision(value: boolean) { this.ignoreVision = value; }
   setIsNight(value: boolean) { this.isNight = value; }
   setTime(time: number) { this.time = time; }
+
   setBlockedCells(blockedCells: number[]) {
-    this.cells = getBlockedCells(gameState.cells, blockedCells)
+    this.cells = getBlockedCells(GameState.getInstance().cells, blockedCells);
   }
+
   setCtxScale(playerCharacterPosition: PositionComponent) {
     this.ctx.save();
-    const scale: number = 1 / this.cameraDistance; // Calculate scaling factor based on zoom level
-    // Get character's position in pixel coordinates
+    const scale: number = 1 / this.cameraDistance;
     const [characterX, characterY]: [number, number] = playerCharacterPosition.coordsPx;
-    // Calculate the maximum and minimum allowable translations
     const maxTranslateX: number = 0;
     const maxTranslateY: number = 0;
-    const minTranslateX: number = this.w - (this.w * scale); // Prevent going past the right boundary
-    const minTranslateY: number = this.h - (this.h * scale); // Prevent going past the bottom boundary
-    // Apply initial translation to center the camera on the character
+    const minTranslateX: number = this.w - (this.w * scale);
+    const minTranslateY: number = this.h - (this.h * scale);
     this.translateX = this.w / 2 - characterX * scale;
     this.translateY = this.h / 2 - characterY * scale;
-    // Clamp the translation to stay within the world bounds
     this.translateX = Math.min(maxTranslateX, Math.max(minTranslateX, this.translateX));
     this.translateY = Math.min(maxTranslateY, Math.max(minTranslateY, this.translateY));
     this.ctx.translate(this.translateX, this.translateY);
     this.ctx.scale(scale, scale);
   }
+
   restoreCtxScale() {
     this.ctx.resetTransform();
     this.ctx.restore();
   }
 
-  // Add more setters/getters as needed
   prefillDebugState() {
     const debugGridCheckbox: HTMLInputElement = document.getElementById('debugGrid') as HTMLInputElement;
     this.debugGrid = debugGridCheckbox.checked;
@@ -129,4 +138,4 @@ class GameState {
   }
 }
 
-export const gameState = new GameState();
+export const gameState = GameState.getInstance();

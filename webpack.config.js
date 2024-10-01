@@ -11,6 +11,7 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     clean: true,
   },
+  devtool: 'source-map', // or 'inline-source-map' for faster builds
   plugins: [
     new HtmlWebpackPlugin({
       title: 'Canvas',
