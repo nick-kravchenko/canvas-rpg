@@ -70,10 +70,6 @@ class GameState {
     }
   }
 
-  setCameraDistance(value: number): void {
-    this.cameraDistance = value;
-  }
-
   setDebugGrid(value: boolean) { this.debugGrid = value; }
   setDebugData(value: boolean) { this.debugData = value; }
   setIgnoreVision(value: boolean) { this.ignoreVision = value; }

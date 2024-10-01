@@ -57,7 +57,7 @@ class MovementSystem {
       position.coordsPx[1] += (newCharacterPositionPx[1] > position.coordsPx[1] ? movement.speed : newCharacterPositionPx[1] < position.coordsPx[1] ? -movement.speed : 0);
     }
 
-    if (deltaX < cellSize * .1 && deltaY < cellSize * .1) {
+    if (deltaX < cellSize * .75 && deltaY < cellSize * .75) {
       position.cellNumber = newCharacterPosition;
       movement.path.shift(); // Move to the next cell in the path
     }
