@@ -3,8 +3,8 @@ import { drawCharacter } from './draw-character';
 import { drawClock } from './draw-clock';
 import { drawDebugData } from './draw-debug-data';
 import { drawDebugGrid } from './draw-debug-grid';
-import { drawGround } from './draw-ground';
 import { drawEnemy } from './draw-enemy';
+import { drawGround } from './draw-ground';
 import { drawMinimap } from './draw-minimap';
 import { drawPath } from './draw-path';
 import { drawPointer } from './draw-pointer';
@@ -18,12 +18,12 @@ export {
   drawClock,
   drawDebugData,
   drawDebugGrid,
-  drawGround,
   drawEnemy,
+  drawGround,
   drawMinimap,
   drawPath,
   drawPointer,
   drawSquareOnCell,
   drawTree,
   drawVision,
-}
+};
