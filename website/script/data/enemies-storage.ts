@@ -61,7 +61,7 @@ class EnemiesStorage {
     ];
 
     // Map each NPC to a CharacterEntity
-    return npcData.map((enemyData: Npc) => {
+    return npcData.map((enemyData: Npc, index: number ) => {
       const enemyEntity: CharacterEntity = new CharacterEntity();
 
       enemyEntity.addComponent(ComponentKey.VISION, {
@@ -84,6 +84,12 @@ class EnemiesStorage {
 
       enemyEntity.addComponent(ComponentKey.DIRECTION, {
         direction: enemyData.direction,
+      });
+
+      enemyEntity.addComponent(ComponentKey.HEALTH, {
+        max: 100,
+        current: 100 - (10 * index),
+        regenPerSecond: 1,
       });
 
       enemyEntity.addComponent(ComponentKey.NPC_ANCHOR, {

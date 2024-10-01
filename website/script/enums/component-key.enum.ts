@@ -5,5 +5,6 @@ export enum ComponentKey {
   DIRECTION = 'direction',
   PLAYER_CONTROLS = 'playerControls',
   NPC_ANCHOR = 'npcAnchor',
+  HEALTH = 'health',
 }
 

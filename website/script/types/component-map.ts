@@ -1,18 +1,20 @@
 import { ComponentKey } from '../enums/component-key.enum';
 import {
   DirectionComponent,
+  HealthComponent,
   MovementComponent,
   NpcAnchorComponent,
   PlayerControlsComponent,
   PositionComponent,
-  VisionComponent
+  VisionComponent,
 } from '../ecs/component';
 
 export interface ComponentMap {
-  [ComponentKey.VISION]: VisionComponent,
-  [ComponentKey.POSITION]: PositionComponent,
-  [ComponentKey.MOVEMENT]: MovementComponent,
   [ComponentKey.DIRECTION]: DirectionComponent,
-  [ComponentKey.PLAYER_CONTROLS]: PlayerControlsComponent,
+  [ComponentKey.HEALTH]: HealthComponent,
+  [ComponentKey.MOVEMENT]: MovementComponent,
   [ComponentKey.NPC_ANCHOR]: NpcAnchorComponent,
+  [ComponentKey.PLAYER_CONTROLS]: PlayerControlsComponent,
+  [ComponentKey.POSITION]: PositionComponent,
+  [ComponentKey.VISION]: VisionComponent,
 }

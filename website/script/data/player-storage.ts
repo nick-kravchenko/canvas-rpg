@@ -37,6 +37,12 @@ class PlayerStorage {
       direction: DIRECTION.DOWN,
     });
 
+    this.playerCharacter.addComponent(ComponentKey.HEALTH, {
+      max: 100,
+      current: 100,
+      regenPerSecond: 1,
+    });
+
     this.playerCharacter.addComponent(ComponentKey.PLAYER_CONTROLS, {
       pressedKey: null,
       mouseOver: null,
