@@ -30,11 +30,15 @@ class MovementSystem {
     const position: PositionComponent = entity.getComponent(ComponentKey.POSITION);
     const movement: MovementComponent = entity.getComponent(ComponentKey.MOVEMENT);
     if (position && movement && targetCell !== null && position.cellNumber !== targetCell && gameState.cells[targetCell] !== CELL_STATE.BLOCKED) {
+      const start = performance.now();
       const path = getPath(
         position.cellNumber,
         targetCell,
         enemiesStorage.enemies.map(enemy => enemy.getComponent(ComponentKey.POSITION).cellNumber)
       );
+      gameState.debug = {
+        'Path found in': `${((performance.now() - start).toFixed(2))}ms`,
+      }
       if (path && path.length) {
         movement.path = path;
         movement.targetCell = targetCell;
@@ -78,7 +82,7 @@ class MovementSystem {
     const movingEntityPosition: PositionComponent = movingEntity.getComponent(ComponentKey.POSITION);
     const targetEntityPosition: PositionComponent = targetEntity.getComponent(ComponentKey.POSITION);
 
-    const playerNeighbors: number[] = getNeighbors(targetEntityPosition.cellNumber)
+    const playerNeighbors: number[] = getNeighbors(gameState.cellsX, gameState.cellsY, targetEntityPosition.cellNumber, 1)
       .filter((cellNumber: number) => {
         return gameState.cells[cellNumber] !== CELL_STATE.BLOCKED;
       });

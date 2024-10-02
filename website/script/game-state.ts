@@ -11,6 +11,7 @@ export class GameState {
   private _debug: {
     [key: string]: string|number|boolean;
   } = {};
+  frame: number = 0;
 
   canvasElement: HTMLCanvasElement | null = null;
   ctx: CanvasRenderingContext2D | null = null;

@@ -40,8 +40,9 @@ function draw(tick: number) {
   const playerCharacterPosition: PositionComponent = playerStorage.playerCharacter.getComponent(ComponentKey.POSITION);
   const playerCharacterMovement: MovementComponent = playerStorage.playerCharacter.getComponent(ComponentKey.MOVEMENT);
   const playerCharacterVision: VisionComponent = playerStorage.playerCharacter.getComponent(ComponentKey.VISION);
-  const playerCharacterControls: PlayerControlsComponent = playerStorage.playerCharacter.getComponent(ComponentKey.PLAYER_CONTROLS);
 
+  gameState.frame += 1;
+  gameState.debug = { FPS: ~~(gameState.frame / (performance.now() / 1000)) }
   gameState.setCtxScale(playerCharacterPosition);
 
   drawBackground('hsla(100, 100%, 75%, .5)');
@@ -58,7 +59,7 @@ function draw(tick: number) {
   for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {
     if (isWithinScreenBounds(cellNumber)) {
       const cellState: CELL_STATE = gameState.cells[cellNumber];
-      if (gameState.ignoreVision || playerCharacterVision.exploredCells.includes(cellNumber)) {
+      if (gameState.ignoreVision || (playerCharacterVision.exploredCells.includes(cellNumber) && !playerCharacterVision.visibleCells.includes(cellNumber))) {
         if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
       }
 
@@ -78,6 +79,15 @@ function draw(tick: number) {
   let visiblePercent: number = playerCharacterVision.visionRadiusPx / maxVisionPx;
   let alpha: number = .4 + (.2 / visiblePercent);
   drawEntityVision(treeCells, playerStorage.playerCharacter, `rgba(0, 0, 0, ${alpha})`);
+
+  for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {
+    if (isWithinScreenBounds(cellNumber)) {
+      const cellState: CELL_STATE = gameState.cells[cellNumber];
+      if (gameState.ignoreVision || playerCharacterVision.visibleCells.includes(cellNumber)) {
+        if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
+      }
+    }
+  }
 
   drawPointer(playerStorage.playerCharacter, tick);
 

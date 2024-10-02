@@ -1,7 +1,6 @@
 import { getNeighbors } from './get-neighbors';
 import { CELL_STATE } from '../enums/cell-state.enum';
 import { gameState } from '../game-state';
-import { CharacterEntity } from '../ecs/entity';
 
 function reconstructPath(startParents: Map<number, number>, endParents: Map<number, number>, meetingPoint: number) {
   const path: number[] = [];
@@ -21,6 +20,8 @@ function reconstructPath(startParents: Map<number, number>, endParents: Map<numb
 export function getPath(start: number, end: number, blockedCells?: number[]): any {
   const {
     cells,
+    cellsX,
+    cellsY,
   } = gameState;
 
   const startQueue: number[] = [start];
@@ -33,7 +34,7 @@ export function getPath(start: number, end: number, blockedCells?: number[]): an
 
   while (startQueue.length > 0 && endQueue.length > 0) {
     const currentStartCell: number = startQueue.shift();
-    const startNeighbors: number[] = getNeighbors(currentStartCell);
+    const startNeighbors: number[] = getNeighbors(cellsX, cellsY, currentStartCell, 1);
     for (let neighbor of startNeighbors) {
       if (
         !startParents.has(neighbor)
@@ -50,7 +51,7 @@ export function getPath(start: number, end: number, blockedCells?: number[]): an
     }
 
     const currentEndCell: number = endQueue.shift();
-    const endNeighbors: number[] = getNeighbors(currentEndCell);
+    const endNeighbors: number[] = getNeighbors(cellsX, cellsY, currentEndCell, 1);
     for (let neighbor of endNeighbors) {
       if (
         !endParents.has(neighbor)
