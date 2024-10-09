@@ -17,7 +17,9 @@ export default [
   {
     ignores: [
       "**/node_modules/**",
-      '**/website/script/data/**'
+      '**/website/script/data/**',
+      '**/dist/**',
+      'webpack.config.js',
     ],
   }
 ];
