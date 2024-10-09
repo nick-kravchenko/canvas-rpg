@@ -51,5 +51,6 @@ export function pointToRectangleDistance(point: Point, rect: Rectangle): number 
 }
 
 export function pointToCircleDistance(point: Point, circle: Circle): number {
-  return pointToPointDistance(point, circle.center) - circle.radius;
+  const [center, radius]: [Point, number] = circle;
+  return pointToPointDistance(point, center) - radius;
 }

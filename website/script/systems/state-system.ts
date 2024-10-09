@@ -49,7 +49,7 @@ class StateSystem {
     // entity.position.x += direction.x * speed;
     // entity.position.y += direction.y * speed;
 
-    console.log(`GameObject ${entity} is moving. In direction ${directionComponent}. With speed ${speed}`);
+    console.log(`GameObject ${entity} is moving. In direction ${direction}. With speed ${speed}`);
   }
 
   handleAttackingState(entity: GameObject) {
@@ -74,6 +74,7 @@ class StateSystem {
   getEnemiesInRange(entity: GameObject, range: number): GameObject[] {
     // Placeholder logic to get all enemies within a range
     // This would depend on how you're managing entities in your ECS
+    console.log(entity, range);
     return [];
   }
 
@@ -86,3 +87,5 @@ class StateSystem {
     }
   }
 }
+
+export const stateSystem = new StateSystem();
