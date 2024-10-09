@@ -14,4 +14,10 @@ export default [
       "@typescript-eslint/no-var-requires": "off",
     },
   },
+  {
+    ignores: [
+      "**/node_modules/**",
+      '**/website/script/data/**'
+    ],
+  }
 ];

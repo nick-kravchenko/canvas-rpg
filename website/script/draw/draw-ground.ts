@@ -1,4 +1,4 @@
-// @ts-ignore
+// @ts-expect-error @typescript-eslint/cannot-find-module
 import groundImagePng from '../../images/ground2.png';
 import { getPixelCoordsByCellNumber } from '../utils';
 import { CELL_STATE } from '../enums/cell-state.enum';

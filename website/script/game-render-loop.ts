@@ -74,9 +74,9 @@ function draw(tick: number) {
     }
   }
 
-  let maxVisionPx: number = gameState.dayTimeVisionRadius * gameState.cellSize;
-  let visiblePercent: number = playerCharacterVision.visionRadiusPx / maxVisionPx;
-  let alpha: number = .4 + (.2 / visiblePercent);
+  const maxVisionPx: number = gameState.dayTimeVisionRadius * gameState.cellSize;
+  const visiblePercent: number = playerCharacterVision.visionRadiusPx / maxVisionPx;
+  const alpha: number = .4 + (.2 / visiblePercent);
   drawVision(playerStorage.playerCharacter, `rgba(0, 0, 0, ${alpha})`);
 
   for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {

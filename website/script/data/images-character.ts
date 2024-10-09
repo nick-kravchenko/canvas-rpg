@@ -1,12 +1,12 @@
-// @ts-ignore
+// @ts-expect-error
 import characterFrontPng from '../../images/char-front.png';
-// @ts-ignore
+// @ts-expect-error
 import characterBackPng from '../../images/char-back.png';
-// @ts-ignore
+// @ts-expect-error
 import characterLeftPng from '../../images/char-left.png';
-// @ts-ignore
+// @ts-expect-error
 import characterRightPng from '../../images/char-right.png';
-// @ts-ignore
+// @ts-expect-error
 import characterIdlePng from '../../images/mouse-idle.png';
 
 export const imagesCharacter = {

@@ -5,7 +5,7 @@ const wss = new WebSocketServer({
 });
 
 
-wss.on('connection', (webSocket: WebSocket, request) => {
+wss.on('connection', (webSocket: WebSocket) => {
   webSocket.on('message', (message) => {
     console.log(message);    
   })

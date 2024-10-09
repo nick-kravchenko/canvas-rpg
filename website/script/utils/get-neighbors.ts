@@ -27,7 +27,7 @@ export function getNeighbors(w: number, h: number, cellNumber: number, radius: n
   const py: number = ~~(cellNumber / w);
   const pixelSet: PixelSet = new PixelSet(w, h);
   for (let dx: number = 0; dx < radius; dx++) {
-    let dy: number = Math.ceil(Math.sqrt(radius**2 - dx**2));
+    const dy: number = Math.ceil(Math.sqrt(radius**2 - dx**2));
     pixelSet.addPoint([px, py], [px + dx, py + dy]);
     pixelSet.addPoint([px, py], [px + dx, py - dy]);
     pixelSet.addPoint([px, py], [px - dx, py + dy]);

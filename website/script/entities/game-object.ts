@@ -1,10 +1,10 @@
 import { ComponentMap } from '../enums/component-map';
 
 export class GameObject {
-  components: Map<string, any>;
+  components: Map<string, ComponentMap[keyof ComponentMap]>;
 
   constructor() {
-    this.components = new Map<keyof ComponentMap, any>();
+    this.components = new Map<keyof ComponentMap, ComponentMap[keyof ComponentMap]>();
   }
 
   addComponent<K extends keyof ComponentMap>(name: K, component: ComponentMap[K]): void {

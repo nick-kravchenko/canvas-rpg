@@ -13,7 +13,7 @@ export function gameTimerLoop() {
   /**
    * Implement day/night cycle. Updating the player's vision radius according to the time of day
    */
-  let newIsNight: boolean = (gameState.time % gameState.dayNightCycle) >= gameState.dayNightCycle / 2;
+  const newIsNight: boolean = (gameState.time % gameState.dayNightCycle) >= gameState.dayNightCycle / 2;
   if (gameState.isNight !== newIsNight) {
     gameState.setIsNight(newIsNight);
     const newCellsVisionRadius: number = newIsNight ? gameState.nightTimeVisionRadius : gameState.dayTimeVisionRadius;

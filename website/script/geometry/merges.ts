@@ -23,7 +23,7 @@ export function mergeRectanglesIfIntersect(rect1: Rectangle, rect2: Rectangle): 
 }
 
 export function mergeRectanglesInArray(obstacles: Rectangle[]): Rectangle[] {
-  let cloneObstacles: Rectangle[] = Array.from(obstacles);
+  const cloneObstacles: Rectangle[] = Array.from(obstacles);
   let merged: boolean = true;
   while (merged) {
     merged = false;

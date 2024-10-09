@@ -10,7 +10,6 @@ import { getLinesIntersection } from './get-lines-intersection';
 import { getNeighbors } from './get-neighbors';
 import { getNextCharacterPositionByCellNumber } from './get-next-character-position-by-cell-number';
 import { getPath } from './get-path';
-import { getPerlinNoise } from './get-perlin-noise';
 import { getPixelCoordsByCellNumber } from './get-pixel-coords-by-cell-number';
 import { getStateStringByEnum } from './get-state-string-by-enum';
 import { getVisibleTrees } from './get-visible-trees';
@@ -29,7 +28,6 @@ export {
   getNeighbors,
   getNextCharacterPositionByCellNumber,
   getPath,
-  getPerlinNoise,
   getPixelCoordsByCellNumber,
   getStateStringByEnum,
   getVisibleTrees,

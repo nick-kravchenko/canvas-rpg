@@ -14,6 +14,7 @@ class EnemiesStorage {
 
   // Initialize enemies data and map to CharacterEntities
   private initializeEnemies(): GameObject[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const npcData: any[] = [
       {
         position: 66,
@@ -60,6 +61,7 @@ class EnemiesStorage {
     ];
 
     // Map each NPC to a CharacterEntity
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     return npcData.map((enemyData: any, index: number ) => {
       const enemyEntity: GameObject = new GameObject();
 

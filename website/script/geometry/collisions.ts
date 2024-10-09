@@ -45,8 +45,8 @@ export function lineToLineCollisionPoints(intersectLine: Line, intersectedLine: 
 
   // Check if the intersection point lies within both line segments
   if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
-    let intersectionX = (x1 + t * (x2 - x1));
-    let intersectionY = (y1 + t * (y2 - y1));
+    const intersectionX = (x1 + t * (x2 - x1));
+    const intersectionY = (y1 + t * (y2 - y1));
 
     return [intersectionX, intersectionY];
   }
@@ -57,7 +57,7 @@ export function lineToLineCollisionPoints(intersectLine: Line, intersectedLine: 
 export function lineToRectangleCollisionPoints(line: Line, rect: Rectangle): Point[] {
   const collisions: Point[] = [];
   const rectLines: [Line, Line, Line, Line] = rectToLines(rect);
-  for (let rectLine of rectLines) {
+  for (const rectLine of rectLines) {
     const collisionPoint: Point|null = lineToLineCollisionPoints(line, rectLine);
     if (collisionPoint) {
       collisions.push(collisionPoint);
@@ -73,22 +73,22 @@ export function lineToCircleCollisionPoints(line: Line, circle: Circle): Point[]
   const [lineEndX]: Point = lineEnd;
   const [circleX, circleY]: Point = circle.center;
 
-  let dx: number  = lineEndX - lineStartX;
-  let dy: number = lineEndX - lineStartX;
-  let fx: number = lineStartX - circleX;
-  let fy: number = lineStartY - circleY;
+  const dx: number  = lineEndX - lineStartX;
+  const dy: number = lineEndX - lineStartX;
+  const fx: number = lineStartX - circleX;
+  const fy: number = lineStartY - circleY;
 
-  let a: number = dx**2 + dy**2;
-  let b: number = fx * dx + fy * dy;
-  let c: number = fx**2 + fy**2 - circle.radius**2;
+  const a: number = dx**2 + dy**2;
+  const b: number = fx * dx + fy * dy;
+  const c: number = fx**2 + fy**2 - circle.radius**2;
 
-  let discriminant: number = b**2 - 4 * a * c;
+  const discriminant: number = b**2 - 4 * a * c;
 
   if (discriminant < 0) return [];
 
-  let discriminantSqrt: number = Math.sqrt(discriminant);
-  let t1: number = (-b - discriminantSqrt) / (2 * a);
-  let t2: number = (-b + discriminantSqrt) / (2 * a);
+  const discriminantSqrt: number = Math.sqrt(discriminant);
+  const t1: number = (-b - discriminantSqrt) / (2 * a);
+  const t2: number = (-b + discriminantSqrt) / (2 * a);
 
   if (t1 > 0 && t1 < 1) {
     collisions.push([
@@ -135,12 +135,12 @@ export function circleToCircleCollisionPoints(circle1: Circle, circle2: Circle):
   const d: number = pointToPointDistance(circle1.center, circle2.center);
 
   if (d < circle1.radius + circle2.radius) {
-    let a: number = (circle1.radius**2 - circle2.radius**2 + d**2) / (2 * d);
-    let h: number = Math.sqrt(circle1.radius**2 - a**2);
-    let px: number = x1 + a * (dx / d);
-    let py: number = y1 + a * (dy / d);
-    let offsetX: number = -h * (dy / d);
-    let offsetY: number = -h * (dx / d);
+    const a: number = (circle1.radius**2 - circle2.radius**2 + d**2) / (2 * d);
+    const h: number = Math.sqrt(circle1.radius**2 - a**2);
+    const px: number = x1 + a * (dx / d);
+    const py: number = y1 + a * (dy / d);
+    const offsetX: number = -h * (dy / d);
+    const offsetY: number = -h * (dx / d);
 
     collisions.push([px + offsetX, py - offsetY]);
     collisions.push([px - offsetX, py + offsetY]);

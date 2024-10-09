@@ -1,34 +1,35 @@
-// @ts-ignore
+// eslint-no-check
+// @ts-expect-error
 import Autumn_tree1_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Autumn_tree1.png';
-// @ts-ignore
+// @ts-expect-error
 import Autumn_tree2_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Autumn_tree2.png';
-// @ts-ignore
+// @ts-expect-error
 import Autumn_tree3_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Autumn_tree3.png';
-// @ts-ignore
+// @ts-expect-error
 import Broken_tree1_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Broken_tree1.png';
-// @ts-ignore
+// @ts-expect-error
 import Broken_tree2_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Broken_tree2.png';
-// @ts-ignore
+// @ts-expect-error
 import Broken_tree3_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Broken_tree3.png';
-// @ts-ignore
+// @ts-expect-error
 import Broken_tree4_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Broken_tree4.png';
-// @ts-ignore
+// @ts-expect-error
 import Broken_tree5_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Broken_tree5.png';
-// @ts-ignore
+// @ts-expect-error
 import Broken_tree6_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Broken_tree6.png';
-// @ts-ignore
+// @ts-expect-error
 import Broken_tree7_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Broken_tree7.png';
-// @ts-ignore
+// @ts-expect-error
 import Fruit_tree1_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Fruit_tree1.png';
-// @ts-ignore
+// @ts-expect-error
 import Fruit_tree2_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Fruit_tree2.png';
-// @ts-ignore
+// @ts-expect-error
 import Fruit_tree3_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Fruit_tree3.png';
-// @ts-ignore
+// @ts-expect-error
 import Flower_tree1_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Flower_tree1.png';
-// @ts-ignore
+// @ts-expect-error
 import Flower_tree2_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Flower_tree2.png';
-// @ts-ignore
+// @ts-expect-error
 import Flower_tree3_PNG from '../../images/trees/separately/Trees_texture_shadow_dark/Flower_tree3.png';
 
 const imagesTreesPng = [

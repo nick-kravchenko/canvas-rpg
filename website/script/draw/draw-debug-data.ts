@@ -11,7 +11,7 @@ export function drawDebugData() {
 
   const scale = .4;
   const padding = cellSize * .25;
-  let strings: string[] = [];
+  const strings: string[] = [];
   Object.entries(gameState.debug).forEach(([key, value]) => {
     value = typeof value === 'object' ? JSON.stringify(value) : value ;
     strings.push(`${key}: ${value}`);
@@ -24,11 +24,10 @@ export function drawDebugData() {
   ctx.save();
   ctx.fillStyle = 'rgba(0, 0, 0, .5)';
   ctx.strokeStyle = 'rgba(255, 255, 255, 1)';
-  // @ts-ignore
-  const tileWidth: number = strings.reduce((width: number, str) => {
+  const tileWidth: number = (strings.reduce((width: number, str) => {
     const strW: number = ctx.measureText(str).width;
     return strW > width ? strW : str;
-  }, 0) + padding * 2;
+  }, 0) as number) + padding * 2;
   ctx.fillRect(w - tileWidth, 0, tileWidth, (strings.length * cellSize * scale) + padding * 2);
   ctx.strokeRect(w - tileWidth, 0, tileWidth, (strings.length * cellSize * scale) + padding * 2);
   ctx.restore();

@@ -21,7 +21,7 @@ export function getVisibleTrees(
   centerX: number,
   centerY: number,
   radiusPx: number): VisibleTrees {
-  let visibleTrees: VisibleTrees = {
+  const visibleTrees: VisibleTrees = {
     topLeft: [],
     top: [],
     topRight: [],
@@ -33,16 +33,16 @@ export function getVisibleTrees(
   };
   const arr = Array.from(blockedCells);
   for (let i: number = 0; i < arr.length; i++) {
-    let treePosition: number = arr[i];
-    let [treeX, treeY]: [number, number] = getPixelCoordsByCellNumber(treePosition);
-    let isLeft: boolean = (treePosition % cellsX) < (cellNumber % cellsX);
-    let isRight: boolean = (treePosition % cellsX) > (cellNumber % cellsX);
-    let isTop: boolean = (treePosition < cellNumber) && (Math.floor(cellNumber / cellsX) > Math.floor(treePosition / cellsX));
-    let isBottom: boolean = (treePosition > cellNumber) && (Math.floor(cellNumber / cellsX) < Math.floor(treePosition / cellsX));
-    let isVerticalTop: boolean = isTop && (!isLeft && !isRight);
-    let isVerticalBottom: boolean = isBottom && (!isLeft && !isRight);
-    let isHorizontalLeft: boolean = isLeft && (!isTop && !isBottom);
-    let isHorizontalRight: boolean = isRight && (!isTop && !isBottom);
+    const treePosition: number = arr[i];
+    const [treeX, treeY]: [number, number] = getPixelCoordsByCellNumber(treePosition);
+    const isLeft: boolean = (treePosition % cellsX) < (cellNumber % cellsX);
+    const isRight: boolean = (treePosition % cellsX) > (cellNumber % cellsX);
+    const isTop: boolean = (treePosition < cellNumber) && (Math.floor(cellNumber / cellsX) > Math.floor(treePosition / cellsX));
+    const isBottom: boolean = (treePosition > cellNumber) && (Math.floor(cellNumber / cellsX) < Math.floor(treePosition / cellsX));
+    const isVerticalTop: boolean = isTop && (!isLeft && !isRight);
+    const isVerticalBottom: boolean = isBottom && (!isLeft && !isRight);
+    const isHorizontalLeft: boolean = isLeft && (!isTop && !isBottom);
+    const isHorizontalRight: boolean = isRight && (!isTop && !isBottom);
     if (isHorizontalLeft && (treeX + cellSize) >= (centerX - radiusPx)) visibleTrees.left.push(treePosition);
     if (isHorizontalRight && (treeX) <= (centerX + radiusPx)) visibleTrees.right.push(treePosition);
     if (isVerticalTop && (treeY + cellSize) >= (centerY - radiusPx)) visibleTrees.top.push(treePosition);

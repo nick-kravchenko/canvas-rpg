@@ -21,7 +21,7 @@ function reconstructPath(startParents: Map<number, number>, endParents: Map<numb
   return path;
 }
 
-export function getPath(start: number, end: number, blockedCells?: number[]): any {
+export function getPath(start: number, end: number, blockedCells?: number[]): number[] {
   const {
     cells,
     cellsX,
@@ -39,7 +39,7 @@ export function getPath(start: number, end: number, blockedCells?: number[]): an
   while (startQueue.length > 0 && endQueue.length > 0) {
     const currentStartCell: number = startQueue.shift();
     const startNeighbors: number[] = getNeighbors(cellsX, cellsY, currentStartCell, 1);
-    for (let neighbor of startNeighbors) {
+    for (const neighbor of startNeighbors) {
       if (
         !startParents.has(neighbor)
         && cells[neighbor] !== CELL_STATE.BLOCKED
@@ -56,7 +56,7 @@ export function getPath(start: number, end: number, blockedCells?: number[]): an
 
     const currentEndCell: number = endQueue.shift();
     const endNeighbors: number[] = getNeighbors(cellsX, cellsY, currentEndCell, 1);
-    for (let neighbor of endNeighbors) {
+    for (const neighbor of endNeighbors) {
       if (
         !endParents.has(neighbor)
         && cells[neighbor] !== CELL_STATE.BLOCKED

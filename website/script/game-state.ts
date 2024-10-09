@@ -69,6 +69,7 @@ export class GameState {
     return GameState.instance;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   set debug(newDebug: { [key: string]: any; }) {
     this._debug = {
       ...this._debug,
@@ -76,6 +77,7 @@ export class GameState {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   get debug(): { [key: string]: any; } {
     return this._debug;
   }

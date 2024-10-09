@@ -15,7 +15,7 @@ export function getNextCharacterPositionByCellNumber(character: GameObject): num
     return movement.path.find((cellNumber: number) => cellNumber !== position.cellNumber) || movement.path[0];
   }
   if (playerControls && playerControls.pressedKey) {
-    let neighbors: { [key: string]: number } = {};
+    const neighbors: { [key: string]: number } = {};
     if (position.cellNumber >= cellsX) neighbors['top'] = (position.cellNumber - cellsX);
     if ((position.cellNumber + 1) % cellsX) neighbors['right'] = (position.cellNumber + 1);
     if (position.cellNumber % cellsX) neighbors['left'] = (position.cellNumber - 1);

@@ -4,7 +4,6 @@ import { gameState } from '../game-state';
 export function drawPath(path: number[]) {
   const {
     ctx,
-    cellsX,
     cellSize,
   } = gameState;
 

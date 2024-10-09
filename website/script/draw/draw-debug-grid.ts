@@ -14,7 +14,7 @@ export function drawDebugGrid() {
     const [x, y]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
     ctx.save();
     ctx.strokeStyle = '#fff';
-    let path2D: Path2D = new Path2D();
+    const path2D: Path2D = new Path2D();
     path2D.rect(x, y, cellSize, cellSize);
     ctx.stroke(path2D);
     ctx.restore();

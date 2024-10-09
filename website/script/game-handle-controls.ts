@@ -62,19 +62,19 @@ export function gameHandleControls() {
 
   const debugGridCheckbox: HTMLInputElement = document.getElementById('debugGrid') as HTMLInputElement;
   debugGridCheckbox.addEventListener('change', (event) => {
-    // @ts-ignore
+    // @ts-expect-error @property 'checked' does not exist on type 'event.target'
     gameState.setDebugGrid(event.target.checked);
   });
 
   const debugDataCheckbox: HTMLInputElement = document.getElementById('debugData') as HTMLInputElement;
   debugDataCheckbox.addEventListener('change', (event) => {
-    // @ts-ignore
+    // @ts-expect-error @property 'checked' does not exist on type 'event.target'
     gameState.setDebugData(event.target.checked);
   });
 
   const ignoreVisionCheckbox: HTMLInputElement = document.getElementById('ignoreVision') as HTMLInputElement;
   ignoreVisionCheckbox.addEventListener('change', (event) => {
-    // @ts-ignore
+    // @ts-expect-error @property 'checked' does not exist on type 'event.target'
     gameState.setIgnoreVision(event.target.checked);
   });
 }

@@ -14,28 +14,28 @@ export function pointToLineDistance(point: Point, line: Line): number {
   const [lineStartX, lineStartY]: Point = lineStart;
   const [lineEndX, lineEndY]: Point = lineEnd;
 
-  let lineVecX: number = lineEndX - lineStartX;
-  let lineVecY: number = lineEndY - lineStartY;
+  const lineVecX: number = lineEndX - lineStartX;
+  const lineVecY: number = lineEndY - lineStartY;
 
-  let pointVecX: number = pointX - lineStartX;
-  let pointVecY: number = pointY - lineStartY;
+  const pointVecX: number = pointX - lineStartX;
+  const pointVecY: number = pointY - lineStartY;
 
-  let lineLengthSquared: number = lineVecX**2 + lineVecY**2;
+  const lineLengthSquared: number = lineVecX**2 + lineVecY**2;
 
   // start and end points of the line are the same
   if (lineLengthSquared === 0) {
     return Math.hypot(pointVecX, pointVecY);
   }
 
-  let t: number = (pointVecX * lineVecX + pointVecY * lineVecY) / lineLengthSquared;
+  const t: number = (pointVecX * lineVecX + pointVecY * lineVecY) / lineLengthSquared;
 
   if (t < 0) { // start point of the line is the closes point to the point
     return Math.hypot(pointVecX, pointVecY);
   } else if (t > 1) { // end point of the line is the closest point to the point
     return Math.hypot(pointX - lineEndX, pointY - lineEndY);
   } else {
-    let projectionX: number = lineStartX + t * lineVecX;
-    let projectionY: number = lineStartY + t * lineVecY;
+    const projectionX: number = lineStartX + t * lineVecX;
+    const projectionY: number = lineStartY + t * lineVecY;
     return Math.hypot(pointX - projectionX, pointY - projectionY);
   }
 }

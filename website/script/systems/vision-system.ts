@@ -19,10 +19,10 @@ class VisionSystem {
     const { cells, cellsX, cellSize } = gameState;
 
     vision.visibleCells = [];
-    let [x, y]: [number, number] = position.coordsPx;
-    let centerX: number = x + (cellSize / 2);
-    let centerY: number = y + (cellSize / 2);
-    let visibleTrees: VisibleTrees = getVisibleTrees(blockedCells, cellsX, cellSize, position.cellNumber, x, y, centerX, centerY, vision.visionRadiusPx);
+    const [x, y]: [number, number] = position.coordsPx;
+    const centerX: number = x + (cellSize / 2);
+    const centerY: number = y + (cellSize / 2);
+    const visibleTrees: VisibleTrees = getVisibleTrees(blockedCells, cellsX, cellSize, position.cellNumber, x, y, centerX, centerY, vision.visionRadiusPx);
 
     for (let i: number = 0; i < cells.length; i++) {
       const distance: number = getDistanceInCells(position.cellNumber, i);
@@ -44,7 +44,7 @@ class VisionSystem {
 
   isOnLineOfSight(visibleTrees: VisibleTrees, centerX: number, centerY: number, cellNumber: number): boolean {
     const { cellSize } = gameState;
-    let [targetX, targetY]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
+    const [targetX, targetY]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
 
     const targetIntersections: [number, number][] = [
       getLinesIntersection(centerX, centerY, targetX + cellSize * .5, targetY + cellSize * .5, targetX, targetY, targetX + cellSize, targetY),  // Top

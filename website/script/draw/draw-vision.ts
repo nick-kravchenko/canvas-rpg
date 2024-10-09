@@ -61,12 +61,12 @@ export function drawVision(character: GameObject, color: string) {
   const vision: VisionComponent = character.getComponent(ComponentKey.VISION);
   const position: PositionComponent = character.getComponent(ComponentKey.POSITION);
 
-  let [x, y]: [number, number] = position.coordsPx;
-  let centerX: number = x + ~~(cellSize * .5);
-  let centerY: number = y + ~~(cellSize * .5);
+  const [x, y]: [number, number] = position.coordsPx;
+  const centerX: number = x + ~~(cellSize * .5);
+  const centerY: number = y + ~~(cellSize * .5);
   let firstPoint: [number, number];
 
-  let visibleTrees: number[] = [];
+  const visibleTrees: number[] = [];
   for (let i: number = 0; i < cells.length; i++) {
     if (cells[i] === CELL_STATE.BLOCKED && vision.visibleCells.includes(i)) {
       visibleTrees.push(i);
@@ -81,13 +81,13 @@ export function drawVision(character: GameObject, color: string) {
   ctx.lineTo(w, h);
   ctx.lineTo(w, 0);
   ctx.lineTo(~~(w * .5), 0);
-  let segments: number = Math.PI * 2 * vision.visionRadiusPx;
+  const segments: number = Math.PI * 2 * vision.visionRadiusPx;
   for (let i: number = 0; i < segments; i++) {
-    let angle: number = i * Math.PI * 2 / segments;
+    const angle: number = i * Math.PI * 2 / segments;
     let x: number = centerX + Math.cos(angle) * vision.visionRadiusPx;
     let y: number = centerY + Math.sin(angle) * vision.visionRadiusPx;
-    for (let treeCell of visibleTrees) {
-      let [treeX, treeY]: [number, number] = getPixelCoordsByCellNumber(treeCell);
+    for (const treeCell of visibleTrees) {
+      const [treeX, treeY]: [number, number] = getPixelCoordsByCellNumber(treeCell);
       const collisionPoints: [number, number][] = lineCollisionsWithCircle([[centerX, centerY], [x, y]], [[treeX + cellSize *.5, treeY + cellSize *.5], cellSize * .5]);
       if (collisionPoints.length) {
         const [px, py]: [number, number] = collisionPoints.pop();
