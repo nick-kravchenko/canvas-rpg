@@ -1,5 +1,5 @@
-import { DIRECTION } from '../enums/direction.enum';
-import { DirectionKeyCodes } from '../enums/direction-key-codes.enum';
+import { DIRECTION } from '../types/direction.enum';
+import { DirectionKeyCodes } from '../types/direction-key-codes.enum';
 
 export function getDirectionByKey(pressedKey: KeyboardEvent['code']): DIRECTION {
   switch (pressedKey) {

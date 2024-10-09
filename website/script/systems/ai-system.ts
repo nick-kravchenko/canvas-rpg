@@ -1,7 +1,7 @@
 import { GameObject } from '../entities';
 import { movementSystem } from './movement-system';
 import { MovementComponent, NpcAnchorComponent, PositionComponent, VisionComponent } from '../components';
-import { ComponentKey } from '../enums/component-key.enum';
+import { ComponentKey } from '../types/component-key.enum';
 
 class AiSystem {
   update(npcEntities: GameObject[], playerEntity: GameObject) {

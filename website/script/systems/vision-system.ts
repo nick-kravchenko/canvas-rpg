@@ -3,7 +3,7 @@ import { PositionComponent, VisionComponent } from '../components';
 import { gameState } from '../game-state';
 import { getVisibleTrees, VisibleTrees } from '../utils/get-visible-trees';
 import { getDistanceInCells, getLinesIntersection, getPixelCoordsByCellNumber } from '../utils';
-import { ComponentKey } from '../enums/component-key.enum';
+import { ComponentKey } from '../types/component-key.enum';
 
 class VisionSystem {
   update(entities: GameObject[], blockedCells: Set<number>) {

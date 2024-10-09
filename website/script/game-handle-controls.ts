@@ -3,10 +3,10 @@ import { debounce, getCellNumberByPixelCoords } from './utils';
 import { movementSystem } from './systems';
 import { playerStorage } from './data/player-storage';
 import { enemiesStorage } from './data/enemies-storage';
-import { DirectionKeyCodes } from './enums/direction-key-codes.enum';
-import { ComponentKey } from './enums/component-key.enum';
+import { DirectionKeyCodes } from './types/direction-key-codes.enum';
+import { ComponentKey } from './types/component-key.enum';
 import { PlayerControlsComponent } from './components';
-import { CELL_STATE } from './enums/cell-state.enum';
+import { CELL_STATE } from './types/cell-state.enum';
 
 export function gameHandleControls() {
   function getCoordsByMouseEvent(event: MouseEvent): [number, number] {

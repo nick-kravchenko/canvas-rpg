@@ -1,4 +1,4 @@
-import { CELL_STATE } from '../enums/cell-state.enum';
+import { CELL_STATE } from '../types/cell-state.enum';
 
 export function getStateStringByEnum(state: CELL_STATE): string {
   switch (state) {

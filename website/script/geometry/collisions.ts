@@ -19,13 +19,14 @@ export function pointToLineCollision(point: Point, line: Line, threshold: number
 
 export function pointToRectangleCollision(point: Point, rect: Rectangle): boolean {
   const [px, py]: Point = point;
-  const [rx, ry]: Point = rect.position;
-  return (px > rx && px < rx + rect.width)
-    && (py > ry && py < ry + rect.height);
+  const [[rx, ry], width, height]: Rectangle = rect;
+  return (px > rx && px < rx + width)
+    && (py > ry && py < ry + height);
 }
 
 export function pointToCircleCollision(point: Point, circle: Circle): boolean {
-  return pointToPointDistance(point, circle.center) < circle.radius;
+  const [circleCenter, circleRadius]: [Point, number] = circle;
+  return pointToPointDistance(point, circleCenter) < circleRadius;
 }
 
 export function lineToLineCollisionPoints(intersectLine: Line, intersectedLine: Line): Point | null {
@@ -71,7 +72,7 @@ export function lineToCircleCollisionPoints(line: Line, circle: Circle): Point[]
   const [lineStart, lineEnd]: [Point, Point] = line;
   const [lineStartX, lineStartY]: Point = lineStart;
   const [lineEndX]: Point = lineEnd;
-  const [circleX, circleY]: Point = circle.center;
+  const [[circleX, circleY], circleRadius]: [Point, number] = circle;
 
   const dx: number  = lineEndX - lineStartX;
   const dy: number = lineEndX - lineStartX;
@@ -80,7 +81,7 @@ export function lineToCircleCollisionPoints(line: Line, circle: Circle): Point[]
 
   const a: number = dx**2 + dy**2;
   const b: number = fx * dx + fy * dy;
-  const c: number = fx**2 + fy**2 - circle.radius**2;
+  const c: number = fx**2 + fy**2 - circleRadius**2;
 
   const discriminant: number = b**2 - 4 * a * c;
 
@@ -128,15 +129,15 @@ export function rectToCircleCollisionPoints(rect: Rectangle, circle: Circle): Po
 
 export function circleToCircleCollisionPoints(circle1: Circle, circle2: Circle): Point[] {
   const collisions: Point[] = [];
-  const [x1, y1]: Point = circle1.center;
-  const [x2, y2]: Point = circle2.center;
+  const [[x1, y1], r1]: [Point, number] = circle1;
+  const [[x2, y2], r2]: [Point, number] = circle2;
   const dx: number = x1 - x2;
   const dy: number = y1 - y2;
-  const d: number = pointToPointDistance(circle1.center, circle2.center);
+  const d: number = pointToPointDistance([x1, y1], [x2, y2]);
 
-  if (d < circle1.radius + circle2.radius) {
-    const a: number = (circle1.radius**2 - circle2.radius**2 + d**2) / (2 * d);
-    const h: number = Math.sqrt(circle1.radius**2 - a**2);
+  if (d < r1 + r2) {
+    const a: number = (r1**2 - r2**2 + d**2) / (2 * d);
+    const h: number = Math.sqrt(r1**2 - a**2);
     const px: number = x1 + a * (dx / d);
     const py: number = y1 + a * (dy / d);
     const offsetX: number = -h * (dy / d);

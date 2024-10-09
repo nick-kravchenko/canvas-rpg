@@ -13,11 +13,11 @@ import {
   drawPath, drawPointer,
   drawTree
 } from './draw';
-import { CELL_STATE } from './enums/cell-state.enum';
+import { CELL_STATE } from './types/cell-state.enum';
 import { enemiesStorage } from './data/enemies-storage';
 import { GameObject } from './entities';
 import { imagesTrees, treesNew } from './data';
-import { ComponentKey } from './enums/component-key.enum';
+import { ComponentKey } from './types/component-key.enum';
 
 const treeCells: Set<number> = treesNew;
 const getRandomTreeImage = (): HTMLImageElement => imagesTrees[Math.floor(Math.random() * imagesTrees.length)];
@@ -62,7 +62,6 @@ function draw(tick: number) {
         if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
       }
 
-      if (cellNumber === playerCharacterPosition.cellNumber) drawCharacter(playerStorage.playerCharacter);
 
       enemiesStorage.enemies.forEach((enemy: GameObject) => {
         const enemyPosition: PositionComponent = enemy.getComponent(ComponentKey.POSITION);
@@ -83,6 +82,7 @@ function draw(tick: number) {
     const cellState: CELL_STATE = gameState.cells[cellNumber];
     if (gameState.ignoreVision || playerCharacterVision.visibleCells.includes(cellNumber)) {
       if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
+      drawCharacter(playerStorage.playerCharacter);
     }
   }
 

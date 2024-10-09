@@ -1,7 +1,7 @@
 // @ts-expect-error @typescript-eslint/cannot-find-module
 import groundImagePng from '../../images/ground2.png';
 import { getPixelCoordsByCellNumber } from '../utils';
-import { CELL_STATE } from '../enums/cell-state.enum';
+import { CELL_STATE } from '../types/cell-state.enum';
 import { getNeighborsAsObject } from '../utils/get-neighbors';
 import { gameState } from '../game-state';
 

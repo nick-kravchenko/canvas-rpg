@@ -2,7 +2,7 @@ import { getCharacterImageByDirection } from '../utils';
 import { gameState } from '../game-state';
 import { GameObject } from '../entities';
 import { DirectionComponent, HealthComponent, PositionComponent } from '../components';
-import { ComponentKey } from '../enums/component-key.enum';
+import { ComponentKey } from '../types/component-key.enum';
 
 export function drawCharacter(
   character: GameObject,
@@ -48,5 +48,16 @@ export function drawCharacter(
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
+  ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle = 'hsla(100, 50%, 50%, .75)';
+  ctx.strokeStyle = 'rgba(0, 0, 0, .7)';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'bottom';
+  ctx.font = '400 18px "JetBrains Mono", sans-serif';
+  ctx.strokeText(`${health.current}/${health.max}`, x + hpBarMarginLeft + hpBarWidth * .5, y + hpBarMarginTop - hpBarHeight);
+  ctx.fillText(`${health.current}/${health.max}`, x + hpBarMarginLeft + hpBarWidth * .5, y + hpBarMarginTop - hpBarHeight);
+  ctx.fill();
   ctx.restore();
 }

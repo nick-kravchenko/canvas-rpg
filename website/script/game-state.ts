@@ -1,5 +1,5 @@
 import { clamp, getBlockedCells, setCanvasSizeToFullScreen } from './utils';
-import { CELL_STATE } from './enums/cell-state.enum';
+import { CELL_STATE } from './types/cell-state.enum';
 import { PositionComponent } from './components';
 
 export class GameState {

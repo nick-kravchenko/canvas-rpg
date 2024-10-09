@@ -2,7 +2,7 @@ import { getCharacterImageByDirection } from '../utils';
 import { gameState } from '../game-state';
 import { GameObject } from '../entities';
 import { DirectionComponent, HealthComponent, PositionComponent } from '../components';
-import { ComponentKey } from '../enums/component-key.enum';
+import { ComponentKey } from '../types/component-key.enum';
 
 export function drawEnemy(
   enemy: GameObject,

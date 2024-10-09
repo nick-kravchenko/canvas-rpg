@@ -1,9 +1,9 @@
-import { CELL_STATE } from '../enums/cell-state.enum';
+import { CELL_STATE } from '../types/cell-state.enum';
 import { gameState } from '../game-state';
 import { GameObject } from '../entities';
 import { MovementComponent, PlayerControlsComponent, PositionComponent } from '../components';
-import { DirectionKeyCodes } from '../enums/direction-key-codes.enum';
-import { ComponentKey } from '../enums/component-key.enum';
+import { DirectionKeyCodes } from '../types/direction-key-codes.enum';
+import { ComponentKey } from '../types/component-key.enum';
 
 export function getNextCharacterPositionByCellNumber(character: GameObject): number {
   const { cells, cellsX, cellsY} = gameState;

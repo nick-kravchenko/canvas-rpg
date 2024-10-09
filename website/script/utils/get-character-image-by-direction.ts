@@ -1,4 +1,4 @@
-import { DIRECTION } from '../enums/direction.enum';
+import { DIRECTION } from '../types/direction.enum';
 import { imagesCharacter } from '../data';
 
 export function getCharacterImageByDirection(direction: DIRECTION): HTMLImageElement {

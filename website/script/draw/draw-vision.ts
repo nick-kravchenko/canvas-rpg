@@ -1,9 +1,9 @@
 import { getPixelCoordsByCellNumber } from '../utils';
 import { gameState } from '../game-state';
 import { GameObject } from '../entities';
-import { ComponentKey } from '../enums/component-key.enum';
+import { ComponentKey } from '../types/component-key.enum';
 import { PositionComponent, VisionComponent } from '../components';
-import { CELL_STATE } from '../enums/cell-state.enum';
+import { CELL_STATE } from '../types/cell-state.enum';
 
 const lineCollisionsWithCircle = (line: [[number, number], [number, number]], circle: [[number, number], number]): [number, number][] => {
   const dx: number = line[1][0] - line[0][0]; // Direction vector of the line

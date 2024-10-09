@@ -1,8 +1,8 @@
 import { clamp, getPixelCoordsByCellNumber } from '../utils';
 import { gameState } from '../game-state';
 import { GameObject } from '../entities';
-import { CELL_STATE } from '../enums/cell-state.enum';
-import { ComponentKey } from '../enums/component-key.enum';
+import { CELL_STATE } from '../types/cell-state.enum';
+import { ComponentKey } from '../types/component-key.enum';
 import { enemiesStorage } from '../data/enemies-storage';
 import { handClosedImg, pointerICursorImg, stepsCursorImg, toolAxeImg } from '../data/images-cursor';
 

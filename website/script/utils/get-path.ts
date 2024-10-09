@@ -1,5 +1,5 @@
 import { getNeighbors } from './get-neighbors';
-import { CELL_STATE } from '../enums/cell-state.enum';
+import { CELL_STATE } from '../types/cell-state.enum';
 import { gameState } from '../game-state';
 
 function reconstructPath(startParents: Map<number, number>, endParents: Map<number, number>, meetingPoint: number) {

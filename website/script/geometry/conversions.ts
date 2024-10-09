@@ -5,11 +5,11 @@ import {
 } from './shapes';
 
 export function rectToLines(rect: Rectangle): [Line, Line, Line, Line] {
-  const [x, y]: Point = rect.position;
+  const [[x, y], width, height]: Rectangle = rect;
   const point1: Point = [x, y]; // top-left
-  const point2: Point = [x + rect.width, y]; // top-right
-  const point3: Point = [x, y + rect.height]; // bottom-left
-  const point4: Point = [x + rect.width, y + rect.height]; // bottom-right
+  const point2: Point = [x + width, y]; // top-right
+  const point3: Point = [x, y + height]; // bottom-left
+  const point4: Point = [x + width, y + height]; // bottom-right
   return [
     [point1, point2], // top
     [point2, point4], // right
@@ -24,11 +24,11 @@ export function rectToPoints(rect: Rectangle): {
   bottomLeft: Point,
   bottomRight: Point,
 } {
-  const [x, y]: Point = rect.position;
+  const [[x, y], width, height]: Rectangle = rect;
   const point1: Point = [x, y]; // top-left
-  const point2: Point = [x + rect.width, y]; // top-right
-  const point3: Point = [x, y + rect.height]; // bottom-left
-  const point4: Point = [x + rect.width, y + rect.height]; // bottom-right
+  const point2: Point = [x + width, y]; // top-right
+  const point3: Point = [x, y + height]; // bottom-left
+  const point4: Point = [x + width, y + height]; // bottom-right
   return {
     topLeft: point1,
     topRight: point2,
@@ -43,11 +43,11 @@ export function rectToSides(rect: Rectangle): {
   right: number,
   top: number,
 } {
-  const [x, y]: Point = rect.position;
+  const [[x, y], width, height]: Rectangle = rect;
   return {
-    bottom: y + rect.height,
+    bottom: y + height,
     left: x,
-    right: x + rect.width,
+    right: x + width,
     top: y,
   };
 }

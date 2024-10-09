@@ -1,4 +1,4 @@
-import { ComponentMap } from '../enums/component-map';
+import { ComponentMap } from '../types/component-map';
 
 export class GameObject {
   components: Map<string, ComponentMap[keyof ComponentMap]>;

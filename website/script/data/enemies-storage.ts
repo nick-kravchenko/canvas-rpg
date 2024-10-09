@@ -1,8 +1,8 @@
 import { GameObject } from '../entities';
 import { getPixelCoordsByCellNumber } from '../utils';
-import { DIRECTION } from '../enums/direction.enum';
+import { DIRECTION } from '../types/direction.enum';
 import { gameState } from '../game-state';
-import { ComponentKey } from '../enums/component-key.enum';
+import { ComponentKey } from '../types/component-key.enum';
 
 class EnemiesStorage {
   private static instance: EnemiesStorage;

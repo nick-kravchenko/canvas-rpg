@@ -1,10 +1,10 @@
 import { GameObject } from '../entities';
 import { MovementComponent, PlayerControlsComponent, PositionComponent } from '../components';
 import { gameState } from '../game-state';
-import { CELL_STATE } from '../enums/cell-state.enum';
+import { CELL_STATE } from '../types/cell-state.enum';
 import { getNeighbors, getNextCharacterPositionByCellNumber, getPath, getPixelCoordsByCellNumber } from '../utils';
-import { DirectionKeyCodes } from '../enums/direction-key-codes.enum';
-import { ComponentKey } from '../enums/component-key.enum';
+import { DirectionKeyCodes } from '../types/direction-key-codes.enum';
+import { ComponentKey } from '../types/component-key.enum';
 import { enemiesStorage } from '../data/enemies-storage';
 
 const DIRECTION_KEYS: string[] = [

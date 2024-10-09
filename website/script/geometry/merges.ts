@@ -2,8 +2,20 @@ import { Point, Rectangle } from './shapes';
 import { rectToSides } from './conversions';
 
 export function mergeRectanglesIfIntersect(rect1: Rectangle, rect2: Rectangle): Rectangle | null {
-  const sides1 = rectToSides(rect1);
-  const sides2 = rectToSides(rect2);
+  const width1: number = rect1[1];
+  const height1: number = rect1[2];
+  const sides1: {
+    bottom: number,
+    left: number,
+    right: number,
+    top: number,
+  } = rectToSides(rect1);
+  const sides2: {
+    bottom: number,
+    left: number,
+    right: number,
+    top: number,
+  } = rectToSides(rect2);
   const intersects: boolean = sides1.left <= sides2.right
     && sides1.right >= sides2.left
     && sides1.top <= sides2.bottom
@@ -12,12 +24,12 @@ export function mergeRectanglesIfIntersect(rect1: Rectangle, rect2: Rectangle): 
   if (sides1.left === sides2.left && sides1.right === sides2.right) {
     const mergedTopLeft: Point = [sides1.left, Math.min(sides1.top, sides2.top)];
     const mergedHeight: number = Math.max(sides1.bottom, sides2.bottom) - Math.min(sides1.top, sides2.top);
-    return new Rectangle(mergedTopLeft, rect1.width, mergedHeight); // Merge vertically
+    return [mergedTopLeft, width1, mergedHeight]; // Merge vertically
   }
   if (sides1.top === sides2.top && sides1.bottom === sides2.bottom) {
     const mergedTopLeft: Point = [Math.min(sides1.left, sides2.left), sides1.top];
     const mergedWidth: number = Math.max(sides1.right, sides2.right) - Math.min(sides1.left, sides2.left);
-    return new Rectangle(mergedTopLeft, mergedWidth, rect1.height); // Merge horizontally
+    return [mergedTopLeft, mergedWidth, height1]; // Merge horizontally
   }
   return null;
 }
