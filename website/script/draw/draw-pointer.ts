@@ -1,6 +1,6 @@
 import { clamp, getPixelCoordsByCellNumber } from '../utils';
 import { gameState } from '../game-state';
-import { CharacterEntity } from '../ecs/entity';
+import { GameObject } from '../entities';
 import { CELL_STATE } from '../enums/cell-state.enum';
 import { ComponentKey } from '../enums/component-key.enum';
 import { enemiesStorage } from '../data/enemies-storage';
@@ -12,7 +12,7 @@ function enemyHovered(cellNumber: number) {
   })
 }
 
-export function drawPointer(playerCharacter: CharacterEntity, tick: number) {
+export function drawPointer(playerCharacter: GameObject, tick: number) {
   const {
     ctx,
     cells,

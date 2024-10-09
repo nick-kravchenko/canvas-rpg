@@ -1,11 +1,8 @@
-import {
-  getPixelCoordsByCellNumber,
-  getNeighbors,
-} from '../utils';
+import { getPixelCoordsByCellNumber } from '../utils';
 import { gameState } from '../game-state';
-import { CharacterEntity } from '../ecs/entity';
+import { GameObject } from '../entities';
 import { ComponentKey } from '../enums/component-key.enum';
-import { PositionComponent, VisionComponent } from '../ecs/component';
+import { PositionComponent, VisionComponent } from '../components';
 import { CELL_STATE } from '../enums/cell-state.enum';
 
 const lineCollisionsWithCircle = (line: [[number, number], [number, number]], circle: [[number, number], number]): [number, number][] => {
@@ -50,7 +47,7 @@ const lineCollisionsWithCircle = (line: [[number, number], [number, number]], ci
   }
 }
 
-export function drawEntityVision(blockedCells: number[], character: CharacterEntity, color: string) {
+export function drawVision(character: GameObject, color: string) {
   if (gameState.ignoreVision) return;
 
   const {
@@ -77,19 +74,6 @@ export function drawEntityVision(blockedCells: number[], character: CharacterEnt
   }
 
   ctx.save();
-  const start: number = performance.now();
-  const points: [number, number][] = getNeighbors(w, h, centerX + centerY * w, vision.visionRadiusPx).map((point: number): [number, number] => {
-    const x: number = point % w;
-    const y: number = ~~(point / w);
-    return [x, y];
-  }).sort((point1: [number, number], point2: [number, number]) => {
-    const p1Atan: number = Math.atan2(point1[0] - centerX, point1[1] - centerY);
-    const p2Atan: number = Math.atan2(point2[0] - centerX, point2[1] - centerY);
-    return p1Atan > p2Atan ? -1 : 1;
-  });
-  gameState.debug = {
-    'Neighbors found in': `${((performance.now() - start).toFixed(2))}ms`,
-  };
   ctx.fillStyle = color;
   ctx.beginPath();
   ctx.moveTo(0, 0);
@@ -97,8 +81,11 @@ export function drawEntityVision(blockedCells: number[], character: CharacterEnt
   ctx.lineTo(w, h);
   ctx.lineTo(w, 0);
   ctx.lineTo(~~(w * .5), 0);
-  for (let i: number = 0; i < points.length; i += 4) {
-    let [x, y]: [number, number] = points[i];
+  let segments: number = Math.PI * 2 * vision.visionRadiusPx;
+  for (let i: number = 0; i < segments; i++) {
+    let angle: number = i * Math.PI * 2 / segments;
+    let x: number = centerX + Math.cos(angle) * vision.visionRadiusPx;
+    let y: number = centerY + Math.sin(angle) * vision.visionRadiusPx;
     for (let treeCell of visibleTrees) {
       let [treeX, treeY]: [number, number] = getPixelCoordsByCellNumber(treeCell);
       const collisionPoints: [number, number][] = lineCollisionsWithCircle([[centerX, centerY], [x, y]], [[treeX + cellSize *.5, treeY + cellSize *.5], cellSize * .5]);

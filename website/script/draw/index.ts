@@ -2,9 +2,9 @@ import { drawBackground } from './draw-background';
 import { drawClock } from './draw-clock';
 import { drawDebugData } from './draw-debug-data';
 import { drawDebugGrid } from './draw-debug-grid';
-import { drawEntityCharacter } from './draw-entity-character';
-import { drawEntityEnemy } from './draw-entity-enemy';
-import { drawEntityVision } from './draw-entity-vision';
+import { drawCharacter } from './draw-character';
+import { drawEnemy } from './draw-enemy';
+import { drawVision } from './draw-vision';
 import { drawGround } from './draw-ground';
 import { drawMinimap } from './draw-minimap';
 import { drawPath } from './draw-path';
@@ -17,9 +17,9 @@ export {
   drawClock,
   drawDebugData,
   drawDebugGrid,
-  drawEntityCharacter,
-  drawEntityEnemy,
-  drawEntityVision,
+  drawCharacter,
+  drawEnemy,
+  drawVision,
   drawGround,
   drawMinimap,
   drawPath,

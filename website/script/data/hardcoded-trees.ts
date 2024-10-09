@@ -46,7 +46,7 @@ export const treesOld = ([
   220, 188, 156, 124, 92, 60,
 ]);
 
-export const treesNew: number[] = [
+export const treesNew: Set<number> = new Set([
   176, 80, 16, /* top */
   210, 117, 24, /* top-right */
   275, 278, 281, /* right */
@@ -57,4 +57,4 @@ export const treesNew: number[] = [
   206, 107, 8, /* top-left */
 
   220, 68, // trees to test enemies vision blocking
-];
+]);

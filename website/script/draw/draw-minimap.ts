@@ -1,12 +1,12 @@
 import { CELL_STATE } from '../enums/cell-state.enum';
 import { gameState } from '../game-state';
-import { CharacterEntity } from '../ecs/entity';
-import { PositionComponent, VisionComponent } from '../ecs/component';
+import { GameObject } from '../entities';
+import { PositionComponent, VisionComponent } from '../components';
 import { ComponentKey } from '../enums/component-key.enum';
 
 export function drawMinimap(
   cameraDistance: number,
-  characterEntity: CharacterEntity,
+  characterEntity: GameObject,
 ) {
   const {
     ctx,

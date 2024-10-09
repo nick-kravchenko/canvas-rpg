@@ -1,6 +1,6 @@
 import { clamp, getBlockedCells, setCanvasSizeToFullScreen } from './utils';
 import { CELL_STATE } from './enums/cell-state.enum';
-import { PositionComponent } from './ecs/component';
+import { PositionComponent } from './components';
 
 export class GameState {
   private static instance: GameState;
@@ -104,7 +104,7 @@ export class GameState {
   setIsNight(value: boolean) { this.isNight = value; }
   setTime(time: number) { this.time = time; }
 
-  setBlockedCells(blockedCells: number[]) {
+  setBlockedCells(blockedCells: Set<number>) {
     this.cells = getBlockedCells(GameState.getInstance().cells, blockedCells);
   }
 

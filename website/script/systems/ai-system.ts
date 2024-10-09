@@ -1,10 +1,10 @@
-import { CharacterEntity } from '../entity';
+import { GameObject } from '../entities';
 import { movementSystem } from './movement-system';
-import { MovementComponent, NpcAnchorComponent, PositionComponent, VisionComponent } from '../component';
-import { ComponentKey } from '../../enums/component-key.enum';
+import { MovementComponent, NpcAnchorComponent, PositionComponent, VisionComponent } from '../components';
+import { ComponentKey } from '../enums/component-key.enum';
 
 class AiSystem {
-  update(npcEntities: CharacterEntity[], playerEntity: CharacterEntity) {
+  update(npcEntities: GameObject[], playerEntity: GameObject) {
     const playerPosition: PositionComponent = playerEntity.getComponent(ComponentKey.POSITION);
 
     npcEntities.forEach((npcEntity) => {

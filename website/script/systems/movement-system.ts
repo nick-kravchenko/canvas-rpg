@@ -1,11 +1,11 @@
-import { CharacterEntity } from '../entity';
-import { MovementComponent, PlayerControlsComponent, PositionComponent } from '../component';
-import { gameState } from '../../game-state';
-import { CELL_STATE } from '../../enums/cell-state.enum';
-import { getNeighbors, getNextCharacterPositionByCellNumber, getPath, getPixelCoordsByCellNumber } from '../../utils';
-import { DirectionKeyCodes } from '../../enums/direction-key-codes.enum';
-import { ComponentKey } from '../../enums/component-key.enum';
-import { enemiesStorage } from '../../data/enemies-storage';
+import { GameObject } from '../entities';
+import { MovementComponent, PlayerControlsComponent, PositionComponent } from '../components';
+import { gameState } from '../game-state';
+import { CELL_STATE } from '../enums/cell-state.enum';
+import { getNeighbors, getNextCharacterPositionByCellNumber, getPath, getPixelCoordsByCellNumber } from '../utils';
+import { DirectionKeyCodes } from '../enums/direction-key-codes.enum';
+import { ComponentKey } from '../enums/component-key.enum';
+import { enemiesStorage } from '../data/enemies-storage';
 
 const DIRECTION_KEYS: string[] = [
   DirectionKeyCodes.KeyW,
@@ -19,14 +19,14 @@ const DIRECTION_KEYS: string[] = [
 ];
 
 class MovementSystem {
-  update(entities: CharacterEntity[]) {
+  update(entities: GameObject[]) {
     entities.forEach(entity => {
       this.moveEntity(entity);
     });
   }
 
   // Handle setting the target cell and calculating the path
-  setTargetCell(entity: CharacterEntity, targetCell: number|null) {
+  setTargetCell(entity: GameObject, targetCell: number|null) {
     const position: PositionComponent = entity.getComponent(ComponentKey.POSITION);
     const movement: MovementComponent = entity.getComponent(ComponentKey.MOVEMENT);
     if (position && movement && targetCell !== null && position.cellNumber !== targetCell && gameState.cells[targetCell] !== CELL_STATE.BLOCKED) {
@@ -49,7 +49,7 @@ class MovementSystem {
     }
   }
 
-  moveEntity(movingEntity: CharacterEntity) {
+  moveEntity(movingEntity: GameObject) {
     const { cellSize } = gameState;
     const position: PositionComponent = movingEntity.getComponent(ComponentKey.POSITION);
     const movement: MovementComponent = movingEntity.getComponent(ComponentKey.MOVEMENT);
@@ -78,7 +78,7 @@ class MovementSystem {
     }
   }
 
-  moveToEntity(movingEntity: CharacterEntity, targetEntity: CharacterEntity) {
+  moveToEntity(movingEntity: GameObject, targetEntity: GameObject) {
     const movingEntityPosition: PositionComponent = movingEntity.getComponent(ComponentKey.POSITION);
     const targetEntityPosition: PositionComponent = targetEntity.getComponent(ComponentKey.POSITION);
 

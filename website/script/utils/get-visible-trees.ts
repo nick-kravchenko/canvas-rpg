@@ -12,7 +12,7 @@ export interface VisibleTrees {
 }
 
 export function getVisibleTrees(
-  blockedCells: number[],
+  blockedCells: Set<number>,
   cellsX: number,
   cellSize: number,
   cellNumber: number,
@@ -31,8 +31,9 @@ export function getVisibleTrees(
     bottomLeft: [],
     left: [],
   };
-  for (let i: number = 0; i < blockedCells.length; i++) {
-    let treePosition: number = blockedCells[i];
+  const arr = Array.from(blockedCells);
+  for (let i: number = 0; i < arr.length; i++) {
+    let treePosition: number = arr[i];
     let [treeX, treeY]: [number, number] = getPixelCoordsByCellNumber(treePosition);
     let isLeft: boolean = (treePosition % cellsX) < (cellNumber % cellsX);
     let isRight: boolean = (treePosition % cellsX) > (cellNumber % cellsX);

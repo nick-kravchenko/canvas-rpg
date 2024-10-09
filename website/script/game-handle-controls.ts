@@ -1,11 +1,11 @@
 import { gameState } from './game-state';
 import { debounce, getCellNumberByPixelCoords } from './utils';
-import { movementSystem } from './ecs/system';
+import { movementSystem } from './systems';
 import { playerStorage } from './data/player-storage';
 import { enemiesStorage } from './data/enemies-storage';
 import { DirectionKeyCodes } from './enums/direction-key-codes.enum';
 import { ComponentKey } from './enums/component-key.enum';
-import { PlayerControlsComponent } from './ecs/component';
+import { PlayerControlsComponent } from './components';
 import { CELL_STATE } from './enums/cell-state.enum';
 
 export function gameHandleControls() {

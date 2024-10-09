@@ -1,5 +1,5 @@
 import { gameState } from './game-state';
-import { aiSystem, movementSystem, visionSystem } from './ecs/system';
+import { aiSystem, movementSystem, visionSystem } from './systems';
 import { playerStorage } from './data/player-storage';
 import { enemiesStorage } from './data/enemies-storage';
 import { treesNew } from './data';

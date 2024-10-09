@@ -1,20 +1,19 @@
 import { getCharacterImageByDirection } from '../utils';
 import { gameState } from '../game-state';
-import { CharacterEntity } from '../ecs/entity';
-import { DirectionComponent, HealthComponent, PositionComponent } from '../ecs/component';
+import { GameObject } from '../entities';
+import { DirectionComponent, HealthComponent, PositionComponent } from '../components';
 import { ComponentKey } from '../enums/component-key.enum';
 
-export function drawEntityCharacter(
-  character: CharacterEntity,
+export function drawEnemy(
+  enemy: GameObject,
 ) {
-  const position: PositionComponent = character.getComponent(ComponentKey.POSITION);
-  const direction: DirectionComponent = character.getComponent(ComponentKey.DIRECTION);
-  const health: HealthComponent = character.getComponent(ComponentKey.HEALTH);
   const {
     ctx,
     cellSize,
   } = gameState;
-
+  const position: PositionComponent = enemy.getComponent(ComponentKey.POSITION);
+  const direction: DirectionComponent = enemy.getComponent(ComponentKey.DIRECTION);
+  const health: HealthComponent = enemy.getComponent(ComponentKey.HEALTH);
   const [x, y]: [number, number] = position.coordsPx;
   ctx.drawImage(
     getCharacterImageByDirection(direction.direction),
@@ -41,7 +40,7 @@ export function drawEntityCharacter(
   ctx.restore();
 
   ctx.save();
-  ctx.fillStyle = 'hsla(100, 50%, 50%, .75)';
+  ctx.fillStyle = 'hsla(0, 50%, 50%, .75)';
   ctx.strokeStyle = 'rgba(0, 0, 0, .7)';
   ctx.beginPath();
   ctx.roundRect(x + hpBarMarginLeft +1 , y + hpBarMarginTop + 1, filledWidth - 2, hpBarHeight - 2, 1);

@@ -4,18 +4,21 @@ import { clamp } from './clamp';
 class PixelSet {
   w: number;
   h: number;
-  private _points: Set<number> = new Set();
+  private _points: Map<number, number> = new Map();
   constructor(w: number, h: number) {
     this.w = w;
     this.h = h;
   }
   get points(): number[] {
-    return Array.from(this._points);
+    return Array.from(this._points.entries())
+      .sort((a: [number, number], b: [number, number]) => b[0] - a[0])
+      .map((point: [number, number]) => point[1]);
   };
-  addPoint(point: [number, number]) {
-    const x: number = clamp(point[0], 0, this.w);
-    const y: number = clamp(point[1], 0, this.h);
-    this._points.add(y * this.w + x);
+  addPoint(center: [number, number], point: [number, number]) {
+    const x: number = clamp(point[0], 0, this.w - 1);
+    const y: number = clamp(point[1], 0, this.h - 1);
+    const angle: number = Math.atan2(x - center[0], y - center[1])
+    this._points.set(angle, y * this.w + x);
   }
 }
 
@@ -25,14 +28,14 @@ export function getNeighbors(w: number, h: number, cellNumber: number, radius: n
   const pixelSet: PixelSet = new PixelSet(w, h);
   for (let dx: number = 0; dx < radius; dx++) {
     let dy: number = Math.ceil(Math.sqrt(radius**2 - dx**2));
-    pixelSet.addPoint([px + dx, py + dy]);
-    pixelSet.addPoint([px + dx, py - dy]);
-    pixelSet.addPoint([px - dx, py + dy]);
-    pixelSet.addPoint([px - dx, py - dy]);
-    pixelSet.addPoint([px + dy, py + dx]);
-    pixelSet.addPoint([px + dy, py - dx]);
-    pixelSet.addPoint([px - dy, py + dx]);
-    pixelSet.addPoint([px - dy, py - dx]);
+    pixelSet.addPoint([px, py], [px + dx, py + dy]);
+    pixelSet.addPoint([px, py], [px + dx, py - dy]);
+    pixelSet.addPoint([px, py], [px - dx, py + dy]);
+    pixelSet.addPoint([px, py], [px - dx, py - dy]);
+    pixelSet.addPoint([px, py], [px + dy, py + dx]);
+    pixelSet.addPoint([px, py], [px + dy, py - dx]);
+    pixelSet.addPoint([px, py], [px - dy, py + dx]);
+    pixelSet.addPoint([px, py], [px - dy, py - dx]);
   }
   return pixelSet.points;
 }

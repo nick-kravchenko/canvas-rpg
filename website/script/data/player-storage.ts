@@ -1,4 +1,4 @@
-import { CharacterEntity } from '../ecs/entity';
+import { GameObject } from '../entities';
 import { gameState } from '../game-state';
 import { getPixelCoordsByCellNumber } from '../utils';
 import { DIRECTION } from '../enums/direction.enum';
@@ -6,10 +6,10 @@ import { ComponentKey } from '../enums/component-key.enum';
 
 class PlayerStorage {
   private static instance: PlayerStorage;
-  public playerCharacter: CharacterEntity;
+  public playerCharacter: GameObject;
 
   private constructor() {
-    this.playerCharacter = new CharacterEntity();
+    this.playerCharacter = new GameObject();
     this.initializePlayer();
   }
 
@@ -28,9 +28,9 @@ class PlayerStorage {
     });
 
     this.playerCharacter.addComponent(ComponentKey.MOVEMENT, {
+      speed: 4,
       targetCell: null,
       path: [],
-      speed: 2,
     });
 
     this.playerCharacter.addComponent(ComponentKey.DIRECTION, {
@@ -39,7 +39,7 @@ class PlayerStorage {
 
     this.playerCharacter.addComponent(ComponentKey.HEALTH, {
       max: 100,
-      current: 100,
+      current: 50,
       regenPerSecond: 1,
     });
 

@@ -1,6 +1,6 @@
 import { getPixelCoordsByCellNumber } from '../utils';
 import { gameState } from '../game-state';
-import { PositionComponent } from '../ecs/component';
+import { PositionComponent } from '../components';
 
 function isOverlappingCharacter(cellNumber: number, cellsX: number, cellSize: number, treeHeight: number, positionComponent: PositionComponent): boolean {
   return treeHeight > cellSize

@@ -1,21 +1,20 @@
-import { CharacterEntity } from '../ecs/entity';
+import { GameObject } from '../entities';
 import { getPixelCoordsByCellNumber } from '../utils';
 import { DIRECTION } from '../enums/direction.enum';
 import { gameState } from '../game-state';
-import { Npc } from '../types/npc';
 import { ComponentKey } from '../enums/component-key.enum';
 
 class EnemiesStorage {
   private static instance: EnemiesStorage;
-  public enemies: CharacterEntity[];
+  public enemies: GameObject[];
 
   private constructor() {
     this.enemies = this.initializeEnemies();
   }
 
   // Initialize enemies data and map to CharacterEntities
-  private initializeEnemies(): CharacterEntity[] {
-    const npcData: Npc[] = [
+  private initializeEnemies(): GameObject[] {
+    const npcData: any[] = [
       {
         position: 66,
         positionPx: getPixelCoordsByCellNumber(66),
@@ -61,8 +60,8 @@ class EnemiesStorage {
     ];
 
     // Map each NPC to a CharacterEntity
-    return npcData.map((enemyData: Npc, index: number ) => {
-      const enemyEntity: CharacterEntity = new CharacterEntity();
+    return npcData.map((enemyData: any, index: number ) => {
+      const enemyEntity: GameObject = new GameObject();
 
       enemyEntity.addComponent(ComponentKey.VISION, {
         visionRadiusCells: enemyData.visionRadius,
@@ -77,9 +76,9 @@ class EnemiesStorage {
       });
 
       enemyEntity.addComponent(ComponentKey.MOVEMENT, {
+        speed: enemyData.speed,
         targetCell: enemyData.target,
         path: enemyData.path,
-        speed: enemyData.speed,
       });
 
       enemyEntity.addComponent(ComponentKey.DIRECTION, {

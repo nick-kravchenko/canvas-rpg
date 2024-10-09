@@ -1,13 +1,13 @@
-import { CharacterEntity } from '../entity';
-import { PositionComponent, VisionComponent } from '../component';
-import { gameState } from '../../game-state';
-import { getVisibleTrees, VisibleTrees } from '../../utils/get-visible-trees';
-import { getDistanceInCells, getLinesIntersection, getPixelCoordsByCellNumber } from '../../utils';
-import { ComponentKey } from '../../enums/component-key.enum';
+import { GameObject } from '../entities';
+import { PositionComponent, VisionComponent } from '../components';
+import { gameState } from '../game-state';
+import { getVisibleTrees, VisibleTrees } from '../utils/get-visible-trees';
+import { getDistanceInCells, getLinesIntersection, getPixelCoordsByCellNumber } from '../utils';
+import { ComponentKey } from '../enums/component-key.enum';
 
 class VisionSystem {
-  update(entities: CharacterEntity[], blockedCells: number[]) {
-    entities.forEach((entity: CharacterEntity) => {
+  update(entities: GameObject[], blockedCells: Set<number>) {
+    entities.forEach((entity: GameObject) => {
       const vision: VisionComponent = entity.getComponent(ComponentKey.VISION);
       const position: PositionComponent = entity.getComponent(ComponentKey.POSITION);
 
@@ -15,7 +15,7 @@ class VisionSystem {
     });
   }
 
-  updateVisionCells(vision: VisionComponent, position: PositionComponent, blockedCells: number[]) {
+  updateVisionCells(vision: VisionComponent, position: PositionComponent, blockedCells: Set<number>) {
     const { cells, cellsX, cellSize } = gameState;
 
     vision.visibleCells = [];
@@ -86,7 +86,7 @@ class VisionSystem {
     return true;  // No trees are blocking the line of sight
   }
 
-  setCharacterVisionRadius(character: CharacterEntity, newVisionRadius: number) {
+  setCharacterVisionRadius(character: GameObject, newVisionRadius: number) {
     const vision: VisionComponent = character.getComponent(ComponentKey.VISION);
     if (newVisionRadius !== vision.visionRadiusCells) {
       vision.visionRadiusCells += newVisionRadius > vision.visionRadiusCells ? 1 : -1;
@@ -98,7 +98,7 @@ class VisionSystem {
     }
   }
 
-  setCharacterVisionRadiusPx(character: CharacterEntity, newVisionRadius: number) {
+  setCharacterVisionRadiusPx(character: GameObject, newVisionRadius: number) {
     const vision: VisionComponent = character.getComponent(ComponentKey.VISION);
     if (newVisionRadius !== vision.visionRadiusPx) {
       vision.visionRadiusPx += newVisionRadius > vision.visionRadiusPx ? 1 : -1;

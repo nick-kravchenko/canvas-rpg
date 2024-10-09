@@ -1,4 +1,4 @@
-import { ComponentKey } from '../enums/component-key.enum';
+import { ComponentKey } from './component-key.enum';
 import {
   DirectionComponent,
   HealthComponent,
@@ -7,7 +7,7 @@ import {
   PlayerControlsComponent,
   PositionComponent,
   VisionComponent,
-} from '../ecs/component';
+} from '../components';
 
 export interface ComponentMap {
   [ComponentKey.DIRECTION]: DirectionComponent,

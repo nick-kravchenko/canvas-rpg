@@ -1,6 +1,6 @@
-import { ComponentMap } from '../../types/component-map';
+import { ComponentMap } from '../enums/component-map';
 
-export class CharacterEntity {
+export class GameObject {
   components: Map<string, any>;
 
   constructor() {

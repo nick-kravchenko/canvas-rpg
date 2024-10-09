@@ -5,14 +5,18 @@ import { gameState } from '../game-state';
 function reconstructPath(startParents: Map<number, number>, endParents: Map<number, number>, meetingPoint: number) {
   const path: number[] = [];
   let current: number = meetingPoint;
-  while (current !== -1) {
-    path.unshift(current);
-    current = startParents.get(current);
-  }
-  current = endParents.get(meetingPoint);
-  while (current !== -1) {
-    path.push(current);
-    current = endParents.get(current);
+  try {
+    while (current !== -1) {
+      path.unshift(current);
+      current = startParents.get(current);
+    }
+    current = endParents.get(meetingPoint);
+    while (current !== -1) {
+      path.push(current);
+      current = endParents.get(current);
+    }
+  } catch (e) {
+    console.error(e);
   }
   return path;
 }

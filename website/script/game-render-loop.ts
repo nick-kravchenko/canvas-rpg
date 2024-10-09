@@ -1,4 +1,4 @@
-import { MovementComponent, PlayerControlsComponent, PositionComponent, VisionComponent } from './ecs/component';
+import { MovementComponent, PositionComponent, VisionComponent } from './components';
 import { playerStorage } from './data/player-storage';
 import { gameState } from './game-state';
 import {
@@ -6,23 +6,22 @@ import {
   drawClock,
   drawDebugData,
   drawDebugGrid,
-  drawEntityCharacter,
-  drawEntityEnemy,
-  drawEntityVision,
+  drawCharacter,
+  drawEnemy,
+  drawVision,
   drawGround, drawMinimap,
   drawPath, drawPointer,
   drawTree
 } from './draw';
 import { CELL_STATE } from './enums/cell-state.enum';
 import { enemiesStorage } from './data/enemies-storage';
-import { CharacterEntity } from './ecs/entity';
+import { GameObject } from './entities';
 import { imagesTrees, treesNew } from './data';
 import { ComponentKey } from './enums/component-key.enum';
 
-const start = performance.now();
-const treeCells: number[] = treesNew;
+const treeCells: Set<number> = treesNew;
 const getRandomTreeImage = (): HTMLImageElement => imagesTrees[Math.floor(Math.random() * imagesTrees.length)];
-const treeImages: { [key: number]: HTMLImageElement } = treeCells.reduce((acc, cellNumber) => ({...acc, [cellNumber]: getRandomTreeImage()}), {});
+const treeImages: { [key: number]: HTMLImageElement } = Array.from(treeCells).reduce((acc, cellNumber) => ({...acc, [cellNumber]: getRandomTreeImage()}), {});
 
 /**
  * Check if cell is in screen bounds
@@ -63,14 +62,14 @@ function draw(tick: number) {
         if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
       }
 
-      if (cellNumber === playerCharacterPosition.cellNumber) drawEntityCharacter(playerStorage.playerCharacter);
+      if (cellNumber === playerCharacterPosition.cellNumber) drawCharacter(playerStorage.playerCharacter);
 
-      enemiesStorage.enemies.forEach((enemy: CharacterEntity) => {
+      enemiesStorage.enemies.forEach((enemy: GameObject) => {
         const enemyPosition: PositionComponent = enemy.getComponent(ComponentKey.POSITION);
         if (
           cellNumber === enemyPosition.cellNumber
           && (gameState.ignoreVision || playerCharacterVision.visibleCells.includes(cellNumber))
-        ) drawEntityEnemy(enemy);
+        ) drawEnemy(enemy);
       });
     }
   }
@@ -78,14 +77,12 @@ function draw(tick: number) {
   let maxVisionPx: number = gameState.dayTimeVisionRadius * gameState.cellSize;
   let visiblePercent: number = playerCharacterVision.visionRadiusPx / maxVisionPx;
   let alpha: number = .4 + (.2 / visiblePercent);
-  drawEntityVision(treeCells, playerStorage.playerCharacter, `rgba(0, 0, 0, ${alpha})`);
+  drawVision(playerStorage.playerCharacter, `rgba(0, 0, 0, ${alpha})`);
 
   for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {
-    if (isWithinScreenBounds(cellNumber)) {
-      const cellState: CELL_STATE = gameState.cells[cellNumber];
-      if (gameState.ignoreVision || playerCharacterVision.visibleCells.includes(cellNumber)) {
-        if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
-      }
+    const cellState: CELL_STATE = gameState.cells[cellNumber];
+    if (gameState.ignoreVision || playerCharacterVision.visibleCells.includes(cellNumber)) {
+      if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
     }
   }
 
