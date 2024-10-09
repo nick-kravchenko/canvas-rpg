@@ -56,8 +56,8 @@ export function drawCharacter(
   ctx.textAlign = 'center';
   ctx.textBaseline = 'bottom';
   ctx.font = '400 18px "JetBrains Mono", sans-serif';
-  ctx.strokeText(`${health.current}/${health.max}`, x + hpBarMarginLeft + hpBarWidth * .5, y + hpBarMarginTop - hpBarHeight);
-  ctx.fillText(`${health.current}/${health.max}`, x + hpBarMarginLeft + hpBarWidth * .5, y + hpBarMarginTop - hpBarHeight);
+  ctx.strokeText(`${~~health.current}/${health.max}`, x + hpBarMarginLeft + hpBarWidth * .5, y + hpBarMarginTop - hpBarHeight);
+  ctx.fillText(`${~~health.current}/${health.max}`, x + hpBarMarginLeft + hpBarWidth * .5, y + hpBarMarginTop - hpBarHeight);
   ctx.fill();
   ctx.restore();
 }

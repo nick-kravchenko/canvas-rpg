@@ -91,6 +91,7 @@ class EnemiesStorage {
         max: 100,
         current: 100 - (10 * index),
         regenPerSecond: 1,
+        ticks: [],
       });
 
       enemyEntity.addComponent(ComponentKey.NPC_ANCHOR, {

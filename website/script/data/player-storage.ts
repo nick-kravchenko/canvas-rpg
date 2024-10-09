@@ -41,6 +41,7 @@ class PlayerStorage {
       max: 100,
       current: 50,
       regenPerSecond: 1,
+      ticks: [],
     });
 
     this.playerCharacter.addComponent(ComponentKey.PLAYER_CONTROLS, {
