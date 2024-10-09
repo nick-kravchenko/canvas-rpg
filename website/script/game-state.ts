@@ -1,5 +1,5 @@
 import { clamp, getBlockedCells, setCanvasSizeToFullScreen } from './utils';
-import { CELL_STATE } from './types/cell-state.enum';
+import { CellStateEnum } from './types/cell-state.enum';
 import { PositionComponent } from './components';
 
 export class GameState {
@@ -24,7 +24,7 @@ export class GameState {
   cellsY: number = 16;
   w: number = this.cellSize * this.cellsX;
   h: number = this.cellSize * this.cellsY;
-  cells: Int8Array = new Int8Array(this.cellsX * this.cellsY).fill(CELL_STATE.UNVISITED);
+  cells: Int8Array = new Int8Array(this.cellsX * this.cellsY).fill(CellStateEnum.UNVISITED);
 
   gameTickRate: number = 1000 / 128; // 128hz
 

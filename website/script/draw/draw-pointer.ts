@@ -1,7 +1,7 @@
 import { clamp, getPixelCoordsByCellNumber } from '../utils';
 import { gameState } from '../game-state';
 import { GameObject } from '../entities';
-import { CELL_STATE } from '../types/cell-state.enum';
+import { CellStateEnum } from '../types/cell-state.enum';
 import { ComponentKey } from '../types/component-key.enum';
 import { enemiesStorage } from '../data/enemies-storage';
 import { handClosedImg, pointerICursorImg, stepsCursorImg, toolAxeImg } from '../data/images-cursor';
@@ -61,7 +61,7 @@ export function drawPointer(playerCharacter: GameObject, tick: number) {
     ctx.beginPath();
     ctx.drawImage(pointerICursorImg, x - cellSize * .125, y - cellSize * .125, cellSize * .5, cellSize * .5);
     let icon: HTMLImageElement = stepsCursorImg;
-    if (exploredCells.includes(mouseOver) && cells[mouseOver] === CELL_STATE.BLOCKED) icon = toolAxeImg;
+    if (exploredCells.includes(mouseOver) && cells[mouseOver] === CellStateEnum.BLOCKED) icon = toolAxeImg;
     if (visibleCells.includes(mouseOver) && enemyHovered(mouseOver)) icon = handClosedImg;
     ctx.drawImage(
       icon,

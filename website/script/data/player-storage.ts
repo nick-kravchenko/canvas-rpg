@@ -3,6 +3,7 @@ import { gameState } from '../game-state';
 import { getPixelCoordsByCellNumber } from '../utils';
 import { DIRECTION } from '../types/direction.enum';
 import { ComponentKey } from '../types/component-key.enum';
+import { CharacterStateEnum } from '../types/character-state.enum';
 
 class PlayerStorage {
   private static instance: PlayerStorage;
@@ -13,7 +14,6 @@ class PlayerStorage {
     this.initializePlayer();
   }
 
-  // Initialize player components
   private initializePlayer() {
     this.playerCharacter.addComponent(ComponentKey.VISION, {
       visionRadiusCells: gameState.dayTimeVisionRadius,
@@ -49,9 +49,19 @@ class PlayerStorage {
       mouseOver: null,
       mouseCoords: null,
     });
+
+    this.playerCharacter.addComponent(ComponentKey.STATE, {
+      state: CharacterStateEnum.IDLE,
+    });
+
+    // this.playerCharacter.addComponent(ComponentKey.ANIMATION, {
+    //   state: 0,
+    //   frame: 0,
+    //   time: 0,
+    //   duration: 0,
+    // });
   }
 
-  // Get the Singleton instance
   public static getInstance(): PlayerStorage {
     if (!PlayerStorage.instance) {
       PlayerStorage.instance = new PlayerStorage();
@@ -59,11 +69,9 @@ class PlayerStorage {
     return PlayerStorage.instance;
   }
 
-  // Optional: Method to reset the player (e.g., on game restart)
   public resetPlayer() {
     this.initializePlayer();
   }
 }
 
-// Export the singleton instance
 export const playerStorage = PlayerStorage.getInstance();

@@ -1,5 +1,5 @@
 import { getNeighbors } from './get-neighbors';
-import { CELL_STATE } from '../types/cell-state.enum';
+import { CellStateEnum } from '../types/cell-state.enum';
 import { gameState } from '../game-state';
 
 function reconstructPath(startParents: Map<number, number>, endParents: Map<number, number>, meetingPoint: number) {
@@ -42,7 +42,7 @@ export function getPath(start: number, end: number, blockedCells?: number[]): nu
     for (const neighbor of startNeighbors) {
       if (
         !startParents.has(neighbor)
-        && cells[neighbor] !== CELL_STATE.BLOCKED
+        && cells[neighbor] !== CellStateEnum.BLOCKED
         && !blockedCells.includes(neighbor)
       ) {
         startQueue.push(neighbor);
@@ -59,7 +59,7 @@ export function getPath(start: number, end: number, blockedCells?: number[]): nu
     for (const neighbor of endNeighbors) {
       if (
         !endParents.has(neighbor)
-        && cells[neighbor] !== CELL_STATE.BLOCKED
+        && cells[neighbor] !== CellStateEnum.BLOCKED
         && !blockedCells.includes(neighbor)
       ) {
         endQueue.push(neighbor);

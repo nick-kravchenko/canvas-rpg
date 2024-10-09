@@ -1,10 +1,11 @@
 export enum ComponentKey {
-  VISION = 'vision',
-  POSITION = 'position',
-  MOVEMENT = 'movement',
+  ATTACK = 'attack',
   DIRECTION = 'direction',
-  PLAYER_CONTROLS = 'playerControls',
-  NPC_ANCHOR = 'npcAnchor',
   HEALTH = 'health',
+  MOVEMENT = 'movement',
+  NPC_ANCHOR = 'npcAnchor',
+  PLAYER_CONTROLS = 'playerControls',
+  POSITION = 'position',
+  STATE = 'state',
+  VISION = 'vision',
 }
-

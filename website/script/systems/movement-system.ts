@@ -1,7 +1,7 @@
 import { GameObject } from '../entities';
 import { MovementComponent, PlayerControlsComponent, PositionComponent } from '../components';
 import { gameState } from '../game-state';
-import { CELL_STATE } from '../types/cell-state.enum';
+import { CellStateEnum } from '../types/cell-state.enum';
 import { getNeighbors, getNextCharacterPositionByCellNumber, getPath, getPixelCoordsByCellNumber } from '../utils';
 import { DirectionKeyCodes } from '../types/direction-key-codes.enum';
 import { ComponentKey } from '../types/component-key.enum';
@@ -29,16 +29,12 @@ class MovementSystem {
   setTargetCell(entity: GameObject, targetCell: number|null) {
     const position: PositionComponent = entity.getComponent(ComponentKey.POSITION);
     const movement: MovementComponent = entity.getComponent(ComponentKey.MOVEMENT);
-    if (position && movement && targetCell !== null && position.cellNumber !== targetCell && gameState.cells[targetCell] !== CELL_STATE.BLOCKED) {
-      const start = performance.now();
-      const path = getPath(
+    if (position && movement && targetCell !== null && position.cellNumber !== targetCell && gameState.cells[targetCell] !== CellStateEnum.BLOCKED) {
+      const path: number[] = getPath(
         position.cellNumber,
         targetCell,
         enemiesStorage.enemies.map(enemy => enemy.getComponent(ComponentKey.POSITION).cellNumber)
       );
-      gameState.debug = {
-        'Path found in': `${((performance.now() - start).toFixed(2))}ms`,
-      }
       if (path && path.length) {
         movement.path = path;
         movement.targetCell = targetCell;
@@ -84,7 +80,7 @@ class MovementSystem {
 
     const playerNeighbors: number[] = getNeighbors(gameState.cellsX, gameState.cellsY, targetEntityPosition.cellNumber, 1)
       .filter((cellNumber: number) => {
-        return gameState.cells[cellNumber] !== CELL_STATE.BLOCKED;
+        return gameState.cells[cellNumber] !== CellStateEnum.BLOCKED;
       });
 
     const closestNeighborPath: number[] = playerNeighbors.reduce((prevPath: number[]|null, cur: number) => {

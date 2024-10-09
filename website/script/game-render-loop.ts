@@ -13,7 +13,7 @@ import {
   drawPath, drawPointer,
   drawTree
 } from './draw';
-import { CELL_STATE } from './types/cell-state.enum';
+import { CellStateEnum } from './types/cell-state.enum';
 import { enemiesStorage } from './data/enemies-storage';
 import { GameObject } from './entities';
 import { imagesTrees, treesNew } from './data';
@@ -57,9 +57,9 @@ function draw(tick: number) {
 
   for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {
     if (isWithinScreenBounds(cellNumber)) {
-      const cellState: CELL_STATE = gameState.cells[cellNumber];
+      const cellState: CellStateEnum = gameState.cells[cellNumber];
       if (gameState.ignoreVision || (playerCharacterVision.exploredCells.includes(cellNumber) && !playerCharacterVision.visibleCells.includes(cellNumber))) {
-        if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
+        if (cellState === CellStateEnum.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
       }
 
 
@@ -79,9 +79,9 @@ function draw(tick: number) {
   drawVision(playerStorage.playerCharacter, `rgba(0, 0, 0, ${alpha})`);
 
   for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {
-    const cellState: CELL_STATE = gameState.cells[cellNumber];
+    const cellState: CellStateEnum = gameState.cells[cellNumber];
     if (gameState.ignoreVision || playerCharacterVision.visibleCells.includes(cellNumber)) {
-      if (cellState === CELL_STATE.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
+      if (cellState === CellStateEnum.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
       drawCharacter(playerStorage.playerCharacter);
     }
   }

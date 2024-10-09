@@ -1,4 +1,4 @@
-export enum CELL_STATE {
+export enum CellStateEnum {
   UNVISITED = 0,
   VISITED = 1,
   START = 2,

@@ -1,16 +1,16 @@
-import { CELL_STATE } from '../types/cell-state.enum';
+import { CellStateEnum } from '../types/cell-state.enum';
 
-export function getStateStringByEnum(state: CELL_STATE): string {
+export function getStateStringByEnum(state: CellStateEnum): string {
   switch (state) {
-    case CELL_STATE.START:
+    case CellStateEnum.START:
       return 'start';
-    case CELL_STATE.FINISH:
+    case CellStateEnum.FINISH:
       return 'finish';
-    case CELL_STATE.BLOCKED:
+    case CellStateEnum.BLOCKED:
       return 'blocked';
-    case CELL_STATE.UNVISITED:
+    case CellStateEnum.UNVISITED:
       return 'unvisited';
-    case CELL_STATE.VISITED:
+    case CellStateEnum.VISITED:
       return 'visited';
   }
 }

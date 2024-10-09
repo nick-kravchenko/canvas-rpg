@@ -1,4 +1,4 @@
-import { CELL_STATE } from '../types/cell-state.enum';
+import { CellStateEnum } from '../types/cell-state.enum';
 import { gameState } from '../game-state';
 import { GameObject } from '../entities';
 import { MovementComponent, PlayerControlsComponent, PositionComponent } from '../components';
@@ -21,10 +21,10 @@ export function getNextCharacterPositionByCellNumber(character: GameObject): num
     if (position.cellNumber % cellsX) neighbors['left'] = (position.cellNumber - 1);
     if (position.cellNumber < ((cellsX * cellsY) - cellsY)) neighbors['bottom'] = (position.cellNumber + cellsX);
 
-    if (cells[neighbors.top] === CELL_STATE.BLOCKED) delete neighbors['top'];
-    if (cells[neighbors.left] === CELL_STATE.BLOCKED) delete neighbors['left'];
-    if (cells[neighbors.bottom] === CELL_STATE.BLOCKED) delete neighbors['bottom'];
-    if (cells[neighbors.right] === CELL_STATE.BLOCKED) delete neighbors['right'];
+    if (cells[neighbors.top] === CellStateEnum.BLOCKED) delete neighbors['top'];
+    if (cells[neighbors.left] === CellStateEnum.BLOCKED) delete neighbors['left'];
+    if (cells[neighbors.bottom] === CellStateEnum.BLOCKED) delete neighbors['bottom'];
+    if (cells[neighbors.right] === CellStateEnum.BLOCKED) delete neighbors['right'];
 
     switch (playerControls.pressedKey) {
       case DirectionKeyCodes.KeyW:

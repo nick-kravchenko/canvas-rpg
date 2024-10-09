@@ -3,7 +3,7 @@ import { gameState } from '../game-state';
 import { GameObject } from '../entities';
 import { ComponentKey } from '../types/component-key.enum';
 import { PositionComponent, VisionComponent } from '../components';
-import { CELL_STATE } from '../types/cell-state.enum';
+import { CellStateEnum } from '../types/cell-state.enum';
 
 const lineCollisionsWithCircle = (line: [[number, number], [number, number]], circle: [[number, number], number]): [number, number][] => {
   const dx: number = line[1][0] - line[0][0]; // Direction vector of the line
@@ -68,7 +68,7 @@ export function drawVision(character: GameObject, color: string) {
 
   const visibleTrees: number[] = [];
   for (let i: number = 0; i < cells.length; i++) {
-    if (cells[i] === CELL_STATE.BLOCKED && vision.visibleCells.includes(i)) {
+    if (cells[i] === CellStateEnum.BLOCKED && vision.visibleCells.includes(i)) {
       visibleTrees.push(i);
     }
   }

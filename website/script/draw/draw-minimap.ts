@@ -1,4 +1,4 @@
-import { CELL_STATE } from '../types/cell-state.enum';
+import { CellStateEnum } from '../types/cell-state.enum';
 import { gameState } from '../game-state';
 import { GameObject } from '../entities';
 import { PositionComponent, VisionComponent } from '../components';
@@ -48,7 +48,7 @@ export function drawMinimap(
       ctx.fillStyle = '#000';
     } else if (cellNumber === positionComponent.cellNumber) {
       ctx.fillStyle = '#fff';
-    } else if (cells[cellNumber] === CELL_STATE.BLOCKED) {
+    } else if (cells[cellNumber] === CellStateEnum.BLOCKED) {
       ctx.fillStyle = '#673600';
     } else {
       ctx.fillStyle = '#595';

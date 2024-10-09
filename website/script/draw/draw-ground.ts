@@ -1,7 +1,7 @@
 // @ts-expect-error @typescript-eslint/cannot-find-module
 import groundImagePng from '../../images/ground2.png';
 import { getPixelCoordsByCellNumber } from '../utils';
-import { CELL_STATE } from '../types/cell-state.enum';
+import { CellStateEnum } from '../types/cell-state.enum';
 import { getNeighborsAsObject } from '../utils/get-neighbors';
 import { gameState } from '../game-state';
 
@@ -18,9 +18,9 @@ export function drawGround(cellNumber: number) {
   const [dx, dy]: [number, number] = getPixelCoordsByCellNumber(cellNumber);
   const neighbors: { [key: string]: number } = getNeighborsAsObject(cellNumber, true);
   function isBlocked(cellNumber: number): boolean {
-    return cells[cellNumber] === CELL_STATE.BLOCKED;
+    return cells[cellNumber] === CellStateEnum.BLOCKED;
   }
-  if (!isBlocked(cellNumber) && Object.values(neighbors).every(neighbor => cells[neighbor] !== CELL_STATE.BLOCKED)) {
+  if (!isBlocked(cellNumber) && Object.values(neighbors).every(neighbor => cells[neighbor] !== CellStateEnum.BLOCKED)) {
     ctx.drawImage(groundImage, 0, cellSize, cellSize, cellSize, dx, dy, cellSize, cellSize);
     return;
   } else if (isBlocked(cellNumber)) {

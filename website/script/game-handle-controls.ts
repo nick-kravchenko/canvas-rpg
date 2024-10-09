@@ -6,7 +6,7 @@ import { enemiesStorage } from './data/enemies-storage';
 import { DirectionKeyCodes } from './types/direction-key-codes.enum';
 import { ComponentKey } from './types/component-key.enum';
 import { PlayerControlsComponent } from './components';
-import { CELL_STATE } from './types/cell-state.enum';
+import { CellStateEnum } from './types/cell-state.enum';
 
 export function gameHandleControls() {
   function getCoordsByMouseEvent(event: MouseEvent): [number, number] {
@@ -22,7 +22,7 @@ export function gameHandleControls() {
     const {
       cells,
     } = gameState;
-    const isTree = cells[targetCell] === CELL_STATE.BLOCKED;
+    const isTree = cells[targetCell] === CellStateEnum.BLOCKED;
     const isEnemy = enemiesStorage.enemies.some(enemy => targetCell === enemy.getComponent(ComponentKey.POSITION).cellNumber);
     if (isTree) {
       // clicked on a tree
