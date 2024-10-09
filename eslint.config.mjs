@@ -19,7 +19,6 @@ export default [
       "**/node_modules/**",
       '**/website/script/data/**',
       '**/dist/**',
-      'webpack.config.js',
     ],
   }
 ];

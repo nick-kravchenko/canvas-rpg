@@ -1,7 +1,7 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const FaviconsWebpackPlugin = require("favicons-webpack-plugin");
+import path from 'path';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import FaviconsWebpackPlugin from "favicons-webpack-plugin";
 
 module.exports = {
   entry: path.resolve(__dirname, 'website/script/index.ts'),
@@ -31,14 +31,6 @@ module.exports = {
         developerURL: 'https://nick-kravchenko.github.io/canvas-rpg/', // Developer website
         background: '#ddd', // Background color of the favicon
         theme_color: '#333', // Theme color for mobile browsers
-        icons: {
-          android: false,
-          chrome: false,
-          favicons: true,
-          appleIcon: true,
-          appleStartup: false,
-          windows: false,
-        },
       },
     }),
   ],
