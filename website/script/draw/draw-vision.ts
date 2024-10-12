@@ -81,7 +81,7 @@ export function drawVision(character: GameObject, color: string) {
   ctx.lineTo(w, h);
   ctx.lineTo(w, 0);
   ctx.lineTo(~~(w * .5), 0);
-  const segments: number = Math.PI * 2 * vision.visionRadiusPx;
+  const segments: number = ~~((Math.PI * 2 * vision.visionRadiusPx) / 2);
   for (let i: number = 0; i < segments; i++) {
     const angle: number = i * Math.PI * 2 / segments;
     let x: number = centerX + Math.cos(angle) * vision.visionRadiusPx;
@@ -98,7 +98,6 @@ export function drawVision(character: GameObject, color: string) {
     if (i === 0) {
       firstPoint = [x, y];
     }
-    ctx.fillRect(x, y, 1, 1);
     ctx.lineTo(x, y);
   }
   ctx.lineTo(...firstPoint);

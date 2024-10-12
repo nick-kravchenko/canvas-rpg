@@ -10,4 +10,5 @@ export const treesNew: Set<number> = new Set([
   206, 107, 8, /* top-left */
 
   220, 68, // trees to test enemies vision blocking
+  179, 212, 308
 ]);

@@ -25,6 +25,10 @@ export class GameState {
   w: number = this.cellSize * this.cellsX;
   h: number = this.cellSize * this.cellsY;
   cells: Int8Array = new Int8Array(this.cellsX * this.cellsY).fill(CellStateEnum.UNVISITED);
+  // cellState = 0; // 0 blocked/unblocked
+  // cellState + 10 -> 10 // explored
+  // cellState + 100 -> 110 // visible
+
 
   gameTickRate: number = 1000 / 128; // 128hz
 

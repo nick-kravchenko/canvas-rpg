@@ -31,7 +31,6 @@ export function gameTimerLoop() {
    * Update movement and vision systems
    */
   movementSystem.update([playerStorage.playerCharacter, ...enemiesStorage.enemies]);
-  healthSystem.update([playerStorage.playerCharacter, ...enemiesStorage.enemies]);
   visionSystem.update([playerStorage.playerCharacter, ...enemiesStorage.enemies], treesNew);
 
   /**
@@ -41,4 +40,13 @@ export function gameTimerLoop() {
     gameTimerLoop();
     clearTimeout(timeout);
   }, gameState.gameTickRate);
+}
+
+export function healthLoop() {
+  healthSystem.update([playerStorage.playerCharacter, ...enemiesStorage.enemies]);
+
+    const timeout = setTimeout(() => {
+      healthLoop();
+      clearTimeout(timeout);
+    }, 1000);
 }

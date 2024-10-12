@@ -2,7 +2,7 @@ import { gameState } from './game-state';
 import { gameHandleControls } from './game-handle-controls';
 import { treesNew } from './data';
 import { gameRenderLoop } from './game-render-loop';
-import { gameTimerLoop } from './game-timer-loop';
+import { gameTimerLoop, healthLoop } from './game-timer-loop';
 
 (async () => {
   gameState.setBlockedCells(treesNew);
@@ -10,6 +10,7 @@ import { gameTimerLoop } from './game-timer-loop';
   gameState.setCanvasSizes();
 
   gameTimerLoop();
+  healthLoop();
 
   gameRenderLoop(0);
 

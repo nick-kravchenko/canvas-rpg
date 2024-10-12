@@ -38,8 +38,8 @@ class PlayerStorage {
     });
 
     this.playerCharacter.addComponent(ComponentKey.HEALTH, {
-      max: 100,
-      current: 50,
+      max: 1000,
+      current: 500,
       regenPerSecond: 1,
       ticks: [],
     });

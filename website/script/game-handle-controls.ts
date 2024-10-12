@@ -1,5 +1,5 @@
 import { gameState } from './game-state';
-import { debounce, getCellNumberByPixelCoords } from './utils';
+import { debounce, getCellNumberByPixelCoords, getNeighbors } from './utils';
 import { movementSystem } from './systems';
 import { playerStorage } from './data/player-storage';
 import { enemiesStorage } from './data/enemies-storage';

@@ -18,6 +18,7 @@ import { enemiesStorage } from './data/enemies-storage';
 import { GameObject } from './entities';
 import { imagesTrees, treesNew } from './data';
 import { ComponentKey } from './types/component-key.enum';
+import { drawHud } from './draw/draw-hud';
 
 const treeCells: Set<number> = treesNew;
 const getRandomTreeImage = (): HTMLImageElement => imagesTrees[Math.floor(Math.random() * imagesTrees.length)];
@@ -81,10 +82,12 @@ function draw(tick: number) {
   for (let cellNumber: number = 0; cellNumber < gameState.cells.length; cellNumber++) {
     const cellState: CellStateEnum = gameState.cells[cellNumber];
     if (gameState.ignoreVision || playerCharacterVision.visibleCells.includes(cellNumber)) {
-      if (cellState === CellStateEnum.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
       drawCharacter(playerStorage.playerCharacter);
+      if (cellState === CellStateEnum.BLOCKED) drawTree(treeImages, cellNumber, playerCharacterPosition);
     }
   }
+
+  drawHud(playerStorage.playerCharacter);
 
   drawPointer(playerStorage.playerCharacter, tick);
 
